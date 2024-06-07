@@ -1,0 +1,24 @@
+{"todos":
+  [
+    {
+      "id": 1,
+      "title": "Cleaning",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "title": "Washing Dishes",
+      "completed": false
+    },
+    {
+      "id": 3,
+      "title": "Mopping",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "title": "Ambot",
+      "completed": false
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/_10sdp">
+
+    <TextView
+        android:id="@+id/tv_all_task"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:fontFamily="@font/myfont"
+        android:textColor="@color/black"
+        android:text="sample 1"
+        android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/taskStatus"
+            android:text="Completed"
+            android:fontFamily="@font/myfont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>
