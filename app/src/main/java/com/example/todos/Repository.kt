@@ -1,12 +1,14 @@
 package com.example.todos
 
 import android.util.Log
+import androidx.room.PrimaryKey
 import com.example.todos.apis.RemoteApi
+import com.example.todos.db.TodoDao
 import com.example.todos.db.UserDao
+import com.example.todos.pojo.Todo
 import com.example.todos.pojo.User
-import com.example.todos.pojo.UserResponse
 
-class UserRepository(private val userDao: UserDao, private val remoteApi: RemoteApi) {
+class Repository(private val todoDao: TodoDao, private val userDao: UserDao, private val remoteApi: RemoteApi) {
 
     suspend fun fetchAndStoreUsers() : List<User> {
         val usersFromApi = remoteApi.getAllUsersFromApi()
@@ -18,7 +20,7 @@ class UserRepository(private val userDao: UserDao, private val remoteApi: Remote
 
     private fun mapToUser(user: User): User {
         return User(
-            id = user.id,
+            userId = user.userId,
             firstName = user.firstName,
             lastName = user.lastName,
             gender = user.gender,
@@ -29,4 +31,19 @@ class UserRepository(private val userDao: UserDao, private val remoteApi: Remote
     }
 
 
+    suspend fun fetchandStoreTodos() : List<Todo>{
+        val todosFromApi = remoteApi.getAllTodosFromApi()
+        val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
+        todoDao.insertAllTodos(storeTheTodos)
+        return todosFromApi.todos
+    }
+
+    private fun mapToTodo(todo: Todo) : Todo {
+        return Todo(
+            id = todo.id,
+            todo = todo.todo,
+            completed = todo.completed,
+            userId = todo.userId
+        )
+    }
 }

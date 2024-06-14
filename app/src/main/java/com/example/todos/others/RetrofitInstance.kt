@@ -1,6 +1,5 @@
 package com.example.todos.others
 
-import com.example.todos.apis.TodoApi
 import com.example.todos.apis.RemoteApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -3,23 +3,15 @@ package com.example.todos
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todos.activity.auth.SignInActivity
-import com.example.todos.adapters.TodoAdapter
 import com.example.todos.databinding.ActivityMainBinding
 import com.example.todos.db.AppDatabase
 import com.example.todos.others.RetrofitInstance
-import com.example.todos.others.SwipeToDeleteHelper
-import com.example.todos.pojo.Todo
 import com.example.todos.pojo.User
 import com.example.todos.viewModels.AuthViewModel
 import com.example.todos.viewModels.TodoViewModel
@@ -30,10 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var userViewModel: UserViewModel
     private lateinit var authViewModel: AuthViewModel
-    private lateinit var currentUser: User
-    private val PREF_NAME = "MyPrefs"
-    private val KEY_IS_LOGGED_IN = "isLoggedIn"
-    private val TAG = "MAIN_ACTIVITY"
+    private lateinit var todoViewModel: TodoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +31,15 @@ class MainActivity : AppCompatActivity() {
 
         val db = AppDatabase.getInstance(applicationContext)
         val userDao = db.userDao()
-        val repository = UserRepository(userDao,RetrofitInstance.userApi)
+        val todoDao = db.todoDao()
+        val repository = Repository(todoDao,userDao,RetrofitInstance.userApi)
         val viewModelFactory = UserViewModelFactory(repository)
         val authRepository = AuthRepository(userDao)
         val authViewModelFactory = AuthViewModelFactory(authRepository)
         authViewModel = ViewModelProvider(this, authViewModelFactory)[AuthViewModel::class.java]
         userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
         userViewModel.fetchUsers()
+        todoViewModel.fetchTodos()
         if(!isLoggedIn()){
             redirectToLogin()
             return

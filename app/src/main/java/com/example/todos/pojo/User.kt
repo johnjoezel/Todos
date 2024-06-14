@@ -1,12 +1,13 @@
 package com.example.todos.pojo
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
 data class User(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 31,
+    val userId: Int = 31,
     val email: String,
     val firstName: String,
     val lastName: String,
