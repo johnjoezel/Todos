@@ -104,4 +104,7 @@ dependencies {
 
     // optional - Test helpers for Lifecycle runtime
     testImplementation ("androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 }

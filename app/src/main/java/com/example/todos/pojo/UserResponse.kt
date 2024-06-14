@@ -1,7 +1,7 @@
 package com.example.todos.pojo
 
 
-data class Users(
+data class UserResponse(
     val limit: Int,
     val skip: Int,
     val total: Int,
