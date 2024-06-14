@@ -6,6 +6,6 @@ import retrofit2.http.GET
 interface RemoteApi {
 
     @GET("users")
-    suspend fun getAllUsers() : UserResponse
+    suspend fun getAllUsersFromApi() : UserResponse
 
 }

@@ -1,6 +1,7 @@
 package com.example.todos.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todos.R
+import com.example.todos.activity.auth.SignInActivity
 import com.example.todos.adapters.TodoAdapter
 import com.example.todos.databinding.FragmentMyTaskBinding
 import com.example.todos.others.SwipeToDeleteHelper
@@ -58,6 +60,39 @@ class MyTaskFragment : Fragment() {
         onFABclick()
         swipeToDelete()
 
+
+        binding.tvLogout.setOnClickListener{
+            confirmLogout()
+        }
+    }
+
+    private fun confirmLogout() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Logout")
+        alertDialogBuilder.setMessage("Are you sure you want to logout?")
+        alertDialogBuilder.setPositiveButton("Yes"){ _,_ ->
+            logout()
+        }
+        alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun logout() {
+        val sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(SignInActivity.PREF_KEY_IS_LOGGED_IN, false)
+        editor.remove(SignInActivity.PREF_KEY_USER_ID)
+        editor.apply()
+
+        redirectToLogin()
+    }
+
+    private fun redirectToLogin() {
+        val intent = Intent(requireActivity(), SignInActivity::class.java)
+        startActivity(intent)
     }
 
     private fun swipeToDelete() {
