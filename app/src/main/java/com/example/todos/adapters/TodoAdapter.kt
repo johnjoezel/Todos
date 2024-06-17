@@ -1,5 +1,6 @@
 package com.example.todos.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,18 @@ class TodoAdapter:RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val currenttodo = todoList[position]
         holder.binding.tvTask.text = currenttodo.todo
+        holder.binding.tvStatus.text = currenttodo.todo
+        val status : String
+        val statuscolor : Int
+        if(currenttodo.completed){
+            status = "Completed"
+            statuscolor = Color.GREEN
+        } else {
+            status = "Incomplete"
+            statuscolor = Color.RED
+        }
+        holder.binding.tvStatus.setTextColor(statuscolor)
+        holder.binding.tvStatus.text = status
     }
 
     override fun getItemCount(): Int {

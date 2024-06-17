@@ -39,7 +39,7 @@ class SignInActivity : AppCompatActivity() {
 
         authViewModel.loginUser.observe(this){ user ->
             if(user!=null){
-                val userId = user.id
+                val userId = user.userId
                 saveLoginStatus(true, userId)
                 redirectToMain()
             }

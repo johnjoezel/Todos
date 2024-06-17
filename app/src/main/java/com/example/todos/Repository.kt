@@ -1,6 +1,7 @@
 package com.example.todos
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.room.PrimaryKey
 import com.example.todos.apis.RemoteApi
 import com.example.todos.db.TodoDao
@@ -12,7 +13,6 @@ class Repository(private val todoDao: TodoDao, private val userDao: UserDao, pri
 
     suspend fun fetchAndStoreUsers() : List<User> {
         val usersFromApi = remoteApi.getAllUsersFromApi()
-        Log.d("UserNiCla", "fetchAndStoreUsers: ${usersFromApi}")
         val storeThereUsers = usersFromApi.users.map{ mapToUser(it)}
         userDao.insertAll(storeThereUsers)
         return usersFromApi.users
@@ -38,6 +38,10 @@ class Repository(private val todoDao: TodoDao, private val userDao: UserDao, pri
         return todosFromApi.todos
     }
 
+    suspend fun insertTodo(todo : Todo) : Long{
+        return todoDao.insertTodo(todo)
+    }
+
     private fun mapToTodo(todo: Todo) : Todo {
         return Todo(
             id = todo.id,
@@ -46,4 +50,18 @@ class Repository(private val todoDao: TodoDao, private val userDao: UserDao, pri
             userId = todo.userId
         )
     }
+
+    suspend fun fetchAvailableTodosByUserId(userId: Int): List<Todo> {
+         val result = todoDao.getAvailableUserTodos(userId)
+        Log.d("patay ta ani", "fetchTodosByUserId: ${result}")
+        return result
+    }
+
+    suspend fun fetchCompletedTodosByUserId(userId: Int): List<Todo> {
+        val result = todoDao.getCompletedUserTodos(userId)
+        Log.d("patay ta ani", "fetchTodosByUserId: ${result}")
+        return result
+    }
+
+
 }

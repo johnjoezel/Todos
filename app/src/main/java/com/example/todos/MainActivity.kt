@@ -2,6 +2,7 @@ package com.example.todos
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -23,12 +24,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
     private lateinit var authViewModel: AuthViewModel
     private lateinit var todoViewModel: TodoViewModel
+    private lateinit var sharedPreferences:SharedPreferences
+    private var userId : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        sharedPreferences = getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
+        userId = sharedPreferences.getInt(SignInActivity.PREF_KEY_USER_ID,-1)
         val db = AppDatabase.getInstance(applicationContext)
         val userDao = db.userDao()
         val todoDao = db.todoDao()
@@ -36,8 +40,10 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = UserViewModelFactory(repository)
         val authRepository = AuthRepository(userDao)
         val authViewModelFactory = AuthViewModelFactory(authRepository)
+        val todoViewModelFactory = TodoViewModelFactory(repository, userId)
         authViewModel = ViewModelProvider(this, authViewModelFactory)[AuthViewModel::class.java]
         userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
+        todoViewModel = ViewModelProvider(this, todoViewModelFactory)[TodoViewModel::class.java]
         userViewModel.fetchUsers()
         todoViewModel.fetchTodos()
         if(!isLoggedIn()){
@@ -57,7 +63,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isLoggedIn(): Boolean {
-        val sharedPreferences = getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
         return sharedPreferences.getBoolean(SignInActivity.PREF_KEY_IS_LOGGED_IN, false)
     }
 

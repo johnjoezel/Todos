@@ -6,11 +6,17 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "todos")
+@Entity(tableName = "todos",
+    foreignKeys = [
+        ForeignKey(entity = User::class,
+            parentColumns = ["userId"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE)
+    ])
 data class Todo(
     val completed: Boolean,
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 31,
+    val id: Int = 0,
     val todo: String,
-    val userId: Int
+    val userId: Int?
 )

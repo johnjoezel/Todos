@@ -61,7 +61,6 @@ class SignUpActivity : AppCompatActivity() {
         val username = binding.etUsername.text.toString()
         val password = binding.etPassword.text.toString()
         val user = User(
-            id = 31,
             firstName = firstname,
             lastName = lastname,
             gender = gender,

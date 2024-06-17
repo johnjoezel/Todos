@@ -6,13 +6,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    val api: TodoApi by lazy {
-        Retrofit.Builder()
-            .baseUrl("https://dummyjson.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(TodoApi::class.java)
-    }
     val userApi: RemoteApi by lazy {
         Retrofit.Builder()
             .baseUrl("https://dummyjson.com/")

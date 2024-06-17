@@ -16,18 +16,52 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class TodoViewModel(private val repository: Repository):ViewModel() {
+class TodoViewModel(private val repository: Repository, private val userId: Int):ViewModel() {
+
+
     private val _todos = MutableLiveData<List<Todo>>()
-    val todos: LiveData<List<Todo>> = _todos
+    val todos: LiveData<List<Todo>> get() = _todos
 
     fun fetchTodos() {
         viewModelScope.launch {
             try {
                 _todos.postValue(repository.fetchandStoreTodos())
             } catch (e: Exception) {
-                Log.d("im here", "fetchUsers: ")
+
             }
         }
+    }
+
+    fun fetchAvailableTodosByCurrentUser(){
+        viewModelScope.launch {
+            try {
+                _todos.postValue(repository.fetchAvailableTodosByUserId(userId))
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    fun fetchCompletedTodosByCurrentUser(userId : Int){
+        viewModelScope.launch {
+            try {
+                _todos.postValue(repository.fetchCompletedTodosByUserId(userId))
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    fun insertTodo(todo : Todo){
+        viewModelScope.launch {
+            try{
+                repository.insertTodo(todo)
+                fetchAvailableTodosByCurrentUser()
+            } catch (e:Exception){
+
+            }
+        }
+
     }
 
 //    fun deleteToDo(position: Int){
@@ -36,9 +70,6 @@ class TodoViewModel(private val repository: Repository):ViewModel() {
 //            currentList.removeAt(position)
 //            todoListLiveData.postValue(currentList)
 //        }
-//    }
-//    fun observeToDoLiveData(): LiveData<List<Todo>> {
-//        return todoListLiveData
 //    }
 
 }
