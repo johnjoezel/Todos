@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todos.Repository
+import com.example.todos.db.Repository
 import com.example.todos.pojo.User
 import kotlinx.coroutines.launch
 
@@ -14,8 +14,6 @@ class UserViewModel(private val repository: Repository): ViewModel() {
 
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
-
-
 
     private val _doneFetching = MutableLiveData<Boolean>()
     val doneFetching: LiveData<Boolean> get() = _doneFetching
@@ -31,7 +29,7 @@ class UserViewModel(private val repository: Repository): ViewModel() {
     fun fetchUsers() {
         viewModelScope.launch {
             try {
-                _users.postValue(repository.fetchAndStoreUsers())
+               repository.fetchAndStoreUsers()
             } catch (e: Exception) {
                 Log.d("im here", "fetchUsers: ")
             }

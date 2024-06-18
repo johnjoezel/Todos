@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.todos.AuthRepository
-import com.example.todos.AuthViewModelFactory
+import com.example.todos.db.AuthRepository
+import com.example.todos.viewmodelfactory.AuthViewModelFactory
 import com.example.todos.MainActivity
 import com.example.todos.databinding.ActivitySignInBinding
 import com.example.todos.db.AppDatabase
@@ -29,7 +31,12 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        val onBackPressedCallback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         val db = AppDatabase.getInstance(applicationContext)
         val userDao = db.userDao()
         val repository = AuthRepository(userDao)
@@ -54,11 +61,25 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(this)
+            .setMessage("Are you sure you want to exit?")
+            .setPositiveButton("Yes") { _, _ ->
+                // Exit the app
+                finishAffinity()
+                System.exit(0)
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                // Dismiss the dialog
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     private fun redirectToSignUp() {
         val intent = Intent(this, SignUpActivity::class.java)
         // Clear the navigation event to avoid navigating multiple times
         startActivity(intent)
-        finish()
     }
 
     private fun redirectToMain() {

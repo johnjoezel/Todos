@@ -1,7 +1,8 @@
-package com.example.todos
+package com.example.todos.viewmodelfactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.todos.db.AuthRepository
 import com.example.todos.viewModels.AuthViewModel
 
 class AuthViewModelFactory(private val authRepository: AuthRepository) : ViewModelProvider.Factory {

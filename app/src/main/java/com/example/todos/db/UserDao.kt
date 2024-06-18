@@ -1,5 +1,6 @@
 package com.example.todos.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -17,4 +18,7 @@ interface UserDao{
 
     @Query("SELECT * FROM users WHERE username = :username AND password = :password")
     suspend fun getUser(username: String, password: String): User
+
+    @Query("SELECT * FROM users")
+    fun getUsers() : LiveData<User>
 }

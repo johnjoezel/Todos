@@ -14,9 +14,9 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE)
     ])
 data class Todo(
-    val completed: Boolean,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val todo: String,
+    val completed: Boolean,
     val userId: Int?
 )

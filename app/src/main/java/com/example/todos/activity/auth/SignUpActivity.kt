@@ -2,22 +2,15 @@ package com.example.todos.activity.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.Text
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.todos.AuthRepository
-import com.example.todos.AuthViewModelFactory
-import com.example.todos.MainActivity
-import com.example.todos.R
+import com.example.todos.db.AuthRepository
+import com.example.todos.viewmodelfactory.AuthViewModelFactory
 import com.example.todos.databinding.ActivitySignUpBinding
 import com.example.todos.db.AppDatabase
 import com.example.todos.others.TextUtilities
-import com.example.todos.others.Utilities
 import com.example.todos.pojo.User
 import com.example.todos.viewModels.AuthViewModel
-import com.example.todos.viewModels.UserViewModel
 
 class SignUpActivity : AppCompatActivity() {
 

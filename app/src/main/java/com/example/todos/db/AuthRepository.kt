@@ -1,4 +1,4 @@
-package com.example.todos
+package com.example.todos.db
 
 import com.example.todos.db.UserDao
 import com.example.todos.pojo.User

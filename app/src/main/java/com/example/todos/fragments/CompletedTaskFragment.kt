@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todos.R
-import com.example.todos.Repository
-import com.example.todos.TodoViewModelFactory
+import com.example.todos.db.Repository
+import com.example.todos.viewmodelfactory.TodoViewModelFactory
 import com.example.todos.activity.auth.SignInActivity
 import com.example.todos.adapters.TodoAdapter
 import com.example.todos.databinding.FragmentCompletedTaskBinding
-import com.example.todos.databinding.FragmentMyTaskBinding
 import com.example.todos.db.AppDatabase
 import com.example.todos.others.RetrofitInstance
 import com.example.todos.pojo.Todo
@@ -59,7 +57,6 @@ class CompletedTaskFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        todoViewModel.fetchCompletedTodosByCurrentUser(userId)
 
         prepareRecyclerView()
         observerToDoLiveData()
@@ -74,7 +71,7 @@ class CompletedTaskFragment : Fragment() {
         }
     }
     private fun observerToDoLiveData() {
-        todoViewModel.todos.observe(viewLifecycleOwner
+        todoViewModel.completedTodos.observe(viewLifecycleOwner
         ) { todos ->
             todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
         }

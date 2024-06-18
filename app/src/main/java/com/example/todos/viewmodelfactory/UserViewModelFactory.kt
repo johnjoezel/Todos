@@ -1,7 +1,8 @@
-package com.example.todos
+package com.example.todos.viewmodelfactory
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModel
+import com.example.todos.db.Repository
 import com.example.todos.viewModels.UserViewModel
 
 class UserViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
