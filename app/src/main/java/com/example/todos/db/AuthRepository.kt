@@ -12,4 +12,9 @@ class AuthRepository(private val userDao: UserDao) {
     suspend fun insertUser(user : User) : Long{
         return userDao.insertUser(user)
     }
+
+    suspend fun checkUsernameAvailability(username : String) : Boolean {
+        val userExist = userDao.checkUsernameAvailability(username)
+        return userExist == null
+    }
 }

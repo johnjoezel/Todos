@@ -15,17 +15,6 @@ class UserViewModel(private val repository: Repository): ViewModel() {
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
 
-    private val _doneFetching = MutableLiveData<Boolean>()
-    val doneFetching: LiveData<Boolean> get() = _doneFetching
-    init {
-        _doneFetching.value = false
-    }
-
-
-    fun setDoneFetching(fetched: Boolean) {
-        _doneFetching.value = fetched
-    }
-
     fun fetchUsers() {
         viewModelScope.launch {
             try {

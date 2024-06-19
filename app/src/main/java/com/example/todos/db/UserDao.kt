@@ -21,4 +21,7 @@ interface UserDao{
 
     @Query("SELECT * FROM users")
     fun getUsers() : LiveData<User>
+
+    @Query("SELECT username FROM users WHERE username = :username")
+    suspend fun checkUsernameAvailability(username : String) : String?
 }

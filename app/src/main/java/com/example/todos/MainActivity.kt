@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -23,51 +24,22 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var userViewModel: UserViewModel
+
     private var userId : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sharedPreferences = getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
-        userId = sharedPreferences.getInt(SignInActivity.PREF_KEY_USER_ID,-1)
-        val db = AppDatabase.getInstance(applicationContext)
-        val userDao = db.userDao()
-        val todoDao = db.todoDao()
-        val repository = Repository(todoDao,userDao,RetrofitInstance.userApi)
-        val viewModelFactory = UserViewModelFactory(repository)
-        userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
-        userViewModel.fetchUsers()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        checkLoginStatus()
-    }
 
-    private fun checkLoginStatus() {
-        binding.circularProgress.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            delay(2000L)
-            binding.circularProgress.visibility = View.GONE
-            if (isLoggedIn()){
-                setupBottomNavigation()
-            } else {
-                redirectToLogin()
+        val onBackPressedCallback = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                moveTaskToBack(true)
             }
         }
-    }
-
-    private fun setupBottomNavigation() {
-        //bottom navigation
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.mainFragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomnav.setupWithNavController(navController)
-    }
-
-    private fun isLoggedIn(): Boolean {
-        return getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE).getBoolean(SignInActivity.PREF_KEY_IS_LOGGED_IN, false)
-    }
-
-    private fun redirectToLogin() {
-        val intent = Intent(this, SignInActivity::class.java)
-        startActivity(intent)
     }
 }

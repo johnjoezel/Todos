@@ -5,16 +5,22 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.todos.db.AuthRepository
 import com.example.todos.viewmodelfactory.AuthViewModelFactory
 import com.example.todos.MainActivity
+import com.example.todos.MainApplication
+import com.example.todos.R
 import com.example.todos.databinding.ActivitySignInBinding
 import com.example.todos.db.AppDatabase
 import com.example.todos.viewModels.AuthViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SignInActivity : AppCompatActivity() {
 
@@ -30,6 +36,12 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
+
+        //check if user is already logged in
+        if(isLoggedin()){
+            redirectToMain()
+        }
+
         setContentView(binding.root)
         val onBackPressedCallback = object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
@@ -43,22 +55,52 @@ class SignInActivity : AppCompatActivity() {
         val viewModelFactory = AuthViewModelFactory(repository)
         authViewModel = ViewModelProvider(this, viewModelFactory)[AuthViewModel::class.java]
 
-
         authViewModel.loginUser.observe(this){ user ->
             if(user!=null){
                 val userId = user.userId
                 saveLoginStatus(true, userId)
-                redirectToMain()
+                lifecycleScope.launch {
+                    delay(500L)
+                    MainApplication.showToastMessage("Signing In")
+                    binding.circularProgress.visibility = View.VISIBLE
+                    delay(1500L)
+                    binding.circularProgress.visibility = View.GONE
+                    redirectToMain()
+                }
+            } else {
+                binding.layoutusername.error = getString(R.string.invalidCredentials)
+                binding.layoutpassword.error = getString(R.string.invalidCredentials)
+                MainApplication.showToastMessage(getString(R.string.invalidCredentials))
             }
         }
 
         binding.btnSignin.setOnClickListener{
-            authViewModel.signIn(binding.etUsername.text.toString(), binding.etPassword.text.toString())
+            val username = binding.etUsername.text.toString()
+            val password = binding.etPassword.text.toString()
+            val fields = listOf(Pair(binding.etUsername, binding.layoutusername to R.string.requiredUsername),
+                Pair(binding.etPassword, binding.layoutpassword to R.string.requiredPassword))
+            var allFieldsFilled = true
+            fields.forEach{(editText, pair) ->
+                val (textInputLayout, errorMessageRedId) = pair
+                if(editText.text!!.isEmpty()){
+                    textInputLayout.error = getString(errorMessageRedId)
+                    allFieldsFilled = false
+                } else {
+                    textInputLayout.error = null
+                }
+            }
+            if(allFieldsFilled){
+                authViewModel.signIn(username, password)
+            }
         }
 
         binding.tvSignup.setOnClickListener{
             redirectToSignUp()
         }
+    }
+
+    private fun isLoggedin(): Boolean {
+        return getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).getBoolean(PREF_KEY_IS_LOGGED_IN, false)
     }
 
     private fun showExitConfirmationDialog() {

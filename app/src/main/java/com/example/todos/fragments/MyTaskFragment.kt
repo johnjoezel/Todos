@@ -10,6 +10,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todos.db.Repository
 import com.example.todos.viewmodelfactory.TodoViewModelFactory
@@ -19,9 +20,10 @@ import com.example.todos.adapters.TodoAdapter
 import com.example.todos.databinding.FragmentMyTaskBinding
 import com.example.todos.db.AppDatabase
 import com.example.todos.others.RetrofitInstance
-import com.example.todos.others.Utilities
 import com.example.todos.pojo.Todo
 import com.example.todos.viewModels.TodoViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MyTaskFragment : Fragment(), OnButtonClickListener {
@@ -31,7 +33,6 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
     private lateinit var binding: FragmentMyTaskBinding
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var todoViewModel: TodoViewModel
-    private lateinit var utilities: Utilities
     private val todoAdapter = TodoAdapter()
     private var userId : Int = 0
 
@@ -56,7 +57,6 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
         // Inflate the layout for this fragment
         binding = FragmentMyTaskBinding.inflate(inflater, container, false)
         val view =  binding.root
-        prepareRecyclerView()
         todoAdapter.setOnButtonClickListener(this)
         return view
     }
@@ -64,15 +64,25 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        todoViewModel.availableTodos.observe(viewLifecycleOwner
-        ) { todos ->
-            todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
-        }
-
+        prepareRecyclerView()
+        observeLiveData()
         binding.addTask.setOnClickListener{
             onFABclick()
         }
 
+    }
+
+    private fun observeLiveData() {
+        lifecycleScope.launch {
+            binding.rvTodos.visibility = View.GONE
+            delay(1000L)
+            binding.circularProgress.visibility = View.GONE
+            binding.rvTodos.visibility = View.VISIBLE
+            todoViewModel.availableTodos.observe(viewLifecycleOwner
+            ) { todos ->
+                todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
+            }
+        }
     }
 
     private fun prepareRecyclerView() {
@@ -92,7 +102,12 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
                 val todo = Todo(completed = false,
                     todo = todoDesc,
                     userId = userId)
-                todoViewModel.insertTodo(todo)
+                lifecycleScope.launch {
+                    binding.circularProgress.visibility = View.VISIBLE
+                    delay(1000L)
+                    binding.circularProgress.visibility = View.GONE
+                    todoViewModel.insertTodo(todo)
+                }
             }
             .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
             }

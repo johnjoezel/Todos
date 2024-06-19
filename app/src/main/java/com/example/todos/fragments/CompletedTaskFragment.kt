@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todos.db.Repository
 import com.example.todos.viewmodelfactory.TodoViewModelFactory
@@ -18,6 +19,8 @@ import com.example.todos.db.AppDatabase
 import com.example.todos.others.RetrofitInstance
 import com.example.todos.pojo.Todo
 import com.example.todos.viewModels.TodoViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -56,12 +59,8 @@ class CompletedTaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         prepareRecyclerView()
         observerToDoLiveData()
-
-
     }
 
     private fun prepareRecyclerView() {
@@ -71,11 +70,13 @@ class CompletedTaskFragment : Fragment() {
         }
     }
     private fun observerToDoLiveData() {
-        todoViewModel.completedTodos.observe(viewLifecycleOwner
-        ) { todos ->
-            todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
+        lifecycleScope.launch {
+            delay(1000L)
+            binding.circularProgress.visibility = View.GONE
+            todoViewModel.completedTodos.observe(viewLifecycleOwner
+            ) { todos ->
+                todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
+            }
         }
-
     }
-
 }

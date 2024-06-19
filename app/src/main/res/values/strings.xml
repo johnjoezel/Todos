@@ -4,4 +4,14 @@
     <string name="signuplink">Don\'t have an account? Sign Up!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="requiredUsername">Input Username</string>
+    <string name="requiredPassword">Input Password</string>
+    <string name="requireFirstname">Input Firstname</string>
+    <string name="requireLastname">Input Lastname</string>
+    <string name="requireGender">Input Gender</string>
+    <string name="requireCPassword">Input Confirm Password</string>
+    <string name="requireEmail">Input Email</string>
+    <string name="usernameTaken">Username is not available</string>
+    <string name="passwordMismatch">Password Mismatch</string>
+    <string name="invalidCredentials">Invalid Credentials</string>
 </resources>
