@@ -3,7 +3,6 @@ package com.example.todos.activity.auth
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -13,8 +12,6 @@ import com.example.todos.db.AuthRepository
 import com.example.todos.viewmodelfactory.AuthViewModelFactory
 import com.example.todos.databinding.ActivitySignUpBinding
 import com.example.todos.db.AppDatabase
-import com.example.todos.others.TextUtilities
-import com.example.todos.pojo.Todo
 import com.example.todos.pojo.User
 import com.example.todos.viewModels.AuthViewModel
 import kotlinx.coroutines.delay
@@ -23,7 +20,6 @@ import kotlinx.coroutines.launch
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
-    private val textUtilities = TextUtilities()
     private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {

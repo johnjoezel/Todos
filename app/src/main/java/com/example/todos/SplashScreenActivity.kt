@@ -43,10 +43,10 @@ class SplashScreenActivity : AppCompatActivity() {
         val viewModelFactory = UserViewModelFactory(repository)
         userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
         sharedPreferences = getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
-        userViewModel.fetchUsers()
         if(isSplashScreenShown()){
             redirectToLogin()
         } else {
+            userViewModel.fetchUsers()
             showSplashScreen()
             flagSplashScreenAsShown()
         }

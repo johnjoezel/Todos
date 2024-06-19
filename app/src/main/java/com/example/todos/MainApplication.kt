@@ -2,7 +2,6 @@ package com.example.todos
 
 import android.app.Application
 import android.content.Context
-import android.text.TextUtils
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

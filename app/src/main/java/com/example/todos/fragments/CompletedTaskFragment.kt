@@ -3,6 +3,7 @@ package com.example.todos.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.todos.MainApplication
 import com.example.todos.db.Repository
 import com.example.todos.viewmodelfactory.TodoViewModelFactory
 import com.example.todos.activity.auth.SignInActivity
@@ -59,6 +61,7 @@ class CompletedTaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        todoViewModel.getCompletedTodos()
         prepareRecyclerView()
         observerToDoLiveData()
     }
@@ -75,7 +78,11 @@ class CompletedTaskFragment : Fragment() {
             binding.circularProgress.visibility = View.GONE
             todoViewModel.completedTodos.observe(viewLifecycleOwner
             ) { todos ->
-                todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
+                if(todos.isEmpty() && todos != null){
+                    MainApplication.showToastMessage("No Todo Available")
+                } else {
+                    todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
+                }
             }
         }
     }

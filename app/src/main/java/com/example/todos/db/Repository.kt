@@ -1,16 +1,17 @@
 package com.example.todos.db
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.todos.apis.RemoteApi
 import com.example.todos.pojo.Todo
 import com.example.todos.pojo.User
+import retrofit2.HttpException
+import java.net.UnknownHostException
 
 class Repository(private val todoDao: TodoDao, private val userDao: UserDao, private val remoteApi: RemoteApi) {
 
     val users: LiveData<User> = userDao.getUsers()
-    val todos: LiveData<List<Todo>> = todoDao.getTodos()
-    val availableTodos: LiveData<List<Todo>> = todoDao.getAvailableUserTodos()
-    val completedTodos: LiveData<List<Todo>> = todoDao.getCompletedUserTodos()
     suspend fun fetchAndStoreUsers(){
         if (users.value == null) {
             val usersFromApi = remoteApi.getAllUsersFromApi()
@@ -44,15 +45,34 @@ class Repository(private val todoDao: TodoDao, private val userDao: UserDao, pri
         )
     }
     suspend fun fetchTodos(userId: Int) {
-        if(todos.value == null){
+        try{
             val todosFromApi = remoteApi.getAllTodosFromApi(userId)
-            val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
-            todoDao.insertAllTodos(storeTheTodos)
+            if(todosFromApi.todos.isNotEmpty()){
+                val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
+                todoDao.insertAllTodos(storeTheTodos)
+            }
+        } catch (e: HttpException) {
+            // new user can't be added to dummyjson
+            Log.e(TAG, "HTTP error: ${e.code()}")
+            // Handle specific error code if needed
+        } catch (e: UnknownHostException) {
+            // Handle network unavailable
+            Log.e(TAG, "Network error: ${e.message}")
+        } catch (e: Exception) {
+            // Handle other errors
+            Log.e(TAG, "Error fetching todos: ${e.message}", e)
         }
     }
 
     suspend fun deleteTodo(todo: Todo){
         todoDao.deleteTodo(todo)
+    }
+
+    suspend fun getAvailableTodos(userId : Int) : List<Todo>{
+        return todoDao.getAvailableTodos(userId)
+    }
+    suspend fun getCompletedTodos(userId : Int) : List<Todo>{
+        return todoDao.getCompletedTodos(userId)
     }
 
 }

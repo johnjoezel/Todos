@@ -15,13 +15,18 @@ import com.example.todos.adapters.AllTodoAdapter
 import com.example.todos.adapters.TodoAdapter
 import com.example.todos.databinding.FragmentMyTaskBinding
 import com.example.todos.databinding.FragmentSettingsBinding
+import com.example.todos.db.AppDatabase
+import com.example.todos.db.Repository
+import com.example.todos.others.RetrofitInstance
 import com.example.todos.viewModels.TodoViewModel
+import com.example.todos.viewmodelfactory.TodoViewModelFactory
 
 
 class SettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var todoViewModel: TodoViewModel
     private var userId : Int = 0
 
 
@@ -29,6 +34,12 @@ class SettingsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
         userId = sharedPreferences.getInt(SignInActivity.PREF_KEY_USER_ID,-1)
+        val db = AppDatabase.getInstance(requireContext())
+        val userDao = db.userDao()
+        val todoDao = db.todoDao()
+        val repository = Repository(todoDao,userDao, RetrofitInstance.userApi)
+        val todoViewModelFactory = TodoViewModelFactory(repository, userId)
+        todoViewModel = ViewModelProvider(this, todoViewModelFactory)[TodoViewModel::class.java]
     }
 
     override fun onCreateView(
