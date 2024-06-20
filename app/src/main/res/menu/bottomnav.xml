@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/myTaskFragment"
-            android:title="My Task" />
+            android:title="Todos" />
 
     <item android:id="@+id/completedTaskFragment"
-        android:title="Completed Task" />
+        android:title="Completed Todos" />
 
-    <item android:id="@+id/otherUserTaskFragment"
-        android:title="Other's Task" />
+    <item android:id="@+id/settingsFragment"
+        android:title="Settings" />
 
 </menu>

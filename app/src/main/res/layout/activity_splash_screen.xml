@@ -6,27 +6,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".MainActivity">
+    tools:context=".SplashScreenActivity">
 
+    <TextView
+        android:id="@+id/tv_textlogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TODO"
+        android:fontFamily="@font/myfont"
+        android:textColor="@color/accent"
+        android:textSize="@dimen/_50sdp"
+        android:letterSpacing="0.5"
+        android:layout_marginTop="@dimen/_100sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <fragment
-        android:id="@+id/mainFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <ProgressBar
+        android:id="@+id/circularProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomnav"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/nav_graph"/>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomnav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/bottomnav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

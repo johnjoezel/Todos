@@ -6,6 +6,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MyTaskFragment">
 
+    <ProgressBar
+        android:id="@+id/circularProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:id="@+id/tv_noTodos"
+        android:visibility="gone"
+        android:text="No Todo Available"
+        android:textSize="@dimen/_18ssp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,6 +44,7 @@
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
+
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -32,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:fontFamily="@font/myfont"
-                    android:text="My Tasks"
+                    android:text="TO DO"
                     android:textColor="@color/accent"
                     android:textSize="@dimen/_20ssp"
                     android:textStyle="bold" />
@@ -43,6 +66,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_search" />
+
 
             </LinearLayout>
 

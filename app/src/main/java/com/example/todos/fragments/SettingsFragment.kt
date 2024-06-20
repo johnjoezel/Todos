@@ -1,45 +1,37 @@
 package com.example.todos.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todos.MainApplication
-import com.example.todos.db.Repository
-import com.example.todos.viewmodelfactory.TodoViewModelFactory
 import com.example.todos.activity.auth.SignInActivity
+import com.example.todos.adapters.AllTodoAdapter
 import com.example.todos.adapters.TodoAdapter
-import com.example.todos.databinding.FragmentCompletedTaskBinding
+import com.example.todos.databinding.FragmentMyTaskBinding
+import com.example.todos.databinding.FragmentSettingsBinding
 import com.example.todos.db.AppDatabase
+import com.example.todos.db.Repository
 import com.example.todos.others.RetrofitInstance
-import com.example.todos.pojo.Todo
 import com.example.todos.viewModels.TodoViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.example.todos.viewmodelfactory.TodoViewModelFactory
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CompletedTaskFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class CompletedTaskFragment : Fragment() {
 
-    private lateinit var binding: FragmentCompletedTaskBinding
+class SettingsFragment : Fragment() {
+
+    private lateinit var binding: FragmentSettingsBinding
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var todoViewModel: TodoViewModel
-    private val todoAdapter = TodoAdapter()
     private var userId : Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
         userId = sharedPreferences.getInt(SignInActivity.PREF_KEY_USER_ID,-1)
         val db = AppDatabase.getInstance(requireContext())
@@ -55,32 +47,48 @@ class CompletedTaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentCompletedTaskBinding.inflate(inflater, container, false)
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        prepareRecyclerView()
-        observerToDoLiveData()
+
+        // Retrieve user ID from SharedPreferences
+
+        binding.tvLogout.setOnClickListener{
+            confirmLogout()
+        }
+
     }
 
-    private fun prepareRecyclerView() {
-        binding.rvCompletedtodos.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = todoAdapter
+
+    private fun confirmLogout() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Logout")
+        alertDialogBuilder.setMessage("Are you sure you want to logout?")
+        alertDialogBuilder.setPositiveButton("Yes"){ _,_ ->
+            logout()
         }
-    }
-    private fun observerToDoLiveData() {
-        lifecycleScope.launch {
-            delay(1000L)
-            binding.circularProgress.visibility = View.GONE
-            todoViewModel.completedTodos.observe(viewLifecycleOwner
-            ) { todos ->
-                if(todos.isNotEmpty()){
-                    todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
-                }
-            }
+        alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
         }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
+    private fun logout() {
+        val sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(SignInActivity.PREF_KEY_IS_LOGGED_IN, false)
+        editor.remove(SignInActivity.PREF_KEY_USER_ID)
+        editor.apply()
+        redirectToLogin()
+    }
+
+    private fun redirectToLogin() {
+        val intent = Intent(requireActivity(), SignInActivity::class.java)
+        startActivity(intent)
+    }
+
 }

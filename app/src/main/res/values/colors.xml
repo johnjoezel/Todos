@@ -10,4 +10,6 @@
     <color name="g_black">#33405f</color>
     <color name="g_loading">#fffafc</color>
     <color name="link">#0000EE</color>
+    <color name="error">#ff3333</color>
+    <color name="success">#5cb85c</color>
 </resources>

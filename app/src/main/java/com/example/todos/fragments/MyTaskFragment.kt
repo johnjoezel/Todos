@@ -3,6 +3,7 @@ package com.example.todos.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,28 +11,45 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todos.R
+import com.example.todos.MainApplication
+import com.example.todos.db.Repository
+import com.example.todos.viewmodelfactory.TodoViewModelFactory
+import com.example.todos.activity.auth.SignInActivity
+import com.example.todos.adapters.OnButtonClickListener
 import com.example.todos.adapters.TodoAdapter
 import com.example.todos.databinding.FragmentMyTaskBinding
-import com.example.todos.others.SwipeToDeleteHelper
+import com.example.todos.db.AppDatabase
+import com.example.todos.others.RetrofitInstance
 import com.example.todos.pojo.Todo
 import com.example.todos.viewModels.TodoViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
-class MyTaskFragment : Fragment() {
+class MyTaskFragment : Fragment(), OnButtonClickListener {
+
+    private val TAG = "MyTaskFragment"
 
     private lateinit var binding: FragmentMyTaskBinding
-    private lateinit var todoMVVM: TodoViewModel
-    private lateinit var todoAdapter: TodoAdapter
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var todoViewModel: TodoViewModel
+    private val todoAdapter = TodoAdapter()
+    private var userId : Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        todoMVVM = ViewModelProvider(this)[TodoViewModel::class.java]
-        todoAdapter = TodoAdapter()
-
+        sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
+        userId = sharedPreferences.getInt(SignInActivity.PREF_KEY_USER_ID,-1)
+        val db = AppDatabase.getInstance(requireContext())
+        val userDao = db.userDao()
+        val todoDao = db.todoDao()
+        val repository = Repository(todoDao,userDao, RetrofitInstance.userApi)
+        val todoViewModelFactory = TodoViewModelFactory(repository, userId)
+        todoViewModel = ViewModelProvider(this, todoViewModelFactory)[TodoViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -40,47 +58,39 @@ class MyTaskFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentMyTaskBinding.inflate(inflater, container, false)
-        return binding.root
+        val view =  binding.root
+        todoAdapter.setOnButtonClickListener(this)
+        prepareRecyclerView()
+        observeLiveData()
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Retrieve user ID from SharedPreferences
-        val sharedPreferences = activity?.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        val userId = sharedPreferences?.getInt("userId", -1)
 
-        prepareRecyclerView()
-        if (userId != null) {
-            todoMVVM.getAllIncompleteByUserId(userId)
-        }
-        observerToDoLiveData()
-        onFABclick()
-        swipeToDelete()
-
-    }
-
-    private fun swipeToDelete() {
-        val swipeToDeleteHelper = ItemTouchHelper(SwipeToDeleteHelper(todoMVVM,requireContext()))
-        swipeToDeleteHelper.attachToRecyclerView(binding.rvTodos)
-    }
-
-    private fun onFABclick() {
         binding.addTask.setOnClickListener{
-            val inputbox = EditText(context)
-            val dialog = AlertDialog.Builder(requireContext())
-                .setTitle("Enter todo")
-                .setView(inputbox)
-                .setPositiveButton("OK"){_, _->
-                    val todoDesc = inputbox.text.toString()
-                    val todo = Todo(false,1000,todoDesc,5)
-                    todoMVVM.addToDo(todo)
-                }
-                .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
-                }
-                .create()
+            onFABclick()
+        }
 
-            dialog.show()
+    }
+
+    private fun observeLiveData() {
+        lifecycleScope.launch {
+            binding.rvTodos.visibility = View.GONE
+            delay(1000L)
+            binding.circularProgress.visibility = View.GONE
+            binding.rvTodos.visibility = View.VISIBLE
+            todoViewModel.availableTodos.observe(viewLifecycleOwner
+            ) { todos ->
+                if(todos.isNotEmpty()){
+                    binding.tvNoTodos.visibility = View.GONE
+
+                } else {
+                    binding.tvNoTodos.visibility = View.VISIBLE
+                }
+                todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
+            }
         }
     }
 
@@ -91,12 +101,51 @@ class MyTaskFragment : Fragment() {
         }
     }
 
-    private fun observerToDoLiveData() {
-        todoMVVM.observeToDoLiveData().observe(viewLifecycleOwner
-        ) {
-            todoList->
-            todoAdapter.setToDoList(todoList = todoList as ArrayList<Todo>)
-        }
+    private fun onFABclick() {
+        val inputbox = EditText(context)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Enter todo")
+            .setView(inputbox)
+            .setPositiveButton("OK"){_, _->
+                val todoDesc = inputbox.text.toString()
+                val todo = Todo(completed = false,
+                    todo = todoDesc,
+                    userId = userId)
+                lifecycleScope.launch {
+                    binding.circularProgress.visibility = View.VISIBLE
+                    delay(1000L)
+                    binding.circularProgress.visibility = View.GONE
+                    todoViewModel.insertTodo(todo)
+                }
+            }
+            .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
+            }
+            .create()
+        dialog.show()
+    }
 
+    override fun onDeleteButtonClicked(position: Int, todo : Todo) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Are you sure you want to delete?")
+            .setPositiveButton("Delete"){_, _->
+                todoViewModel.deleteTodo(todo)
+            }
+            .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
+            }
+            .create()
+        dialog.show()
+    }
+
+    override fun onCompleteButtonClicked(position: Int, todo: Todo) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Please confirm")
+            .setPositiveButton("Complete"){_, _->
+                val completeTodo = Todo(todo.id, todo.todo, completed = true, userId)
+                todoViewModel.insertTodo(completeTodo)
+            }
+            .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
+            }
+            .create()
+        dialog.show()
     }
 }
