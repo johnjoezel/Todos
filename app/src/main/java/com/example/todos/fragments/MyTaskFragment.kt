@@ -60,14 +60,15 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
         binding = FragmentMyTaskBinding.inflate(inflater, container, false)
         val view =  binding.root
         todoAdapter.setOnButtonClickListener(this)
+        prepareRecyclerView()
+        observeLiveData()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        todoViewModel.getAvailableTodos()
-        prepareRecyclerView()
-        observeLiveData()
+
+
         binding.addTask.setOnClickListener{
             onFABclick()
         }
@@ -82,12 +83,13 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
             binding.rvTodos.visibility = View.VISIBLE
             todoViewModel.availableTodos.observe(viewLifecycleOwner
             ) { todos ->
-                if(todos.isEmpty() && todos != null){
-                    MainApplication.showToastMessage("No Todo Available")
-                } else {
-                    todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
-                }
+                if(todos.isNotEmpty()){
+                    binding.tvNoTodos.visibility = View.GONE
 
+                } else {
+                    binding.tvNoTodos.visibility = View.VISIBLE
+                }
+                todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
             }
         }
     }
@@ -114,7 +116,6 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
                     delay(1000L)
                     binding.circularProgress.visibility = View.GONE
                     todoViewModel.insertTodo(todo)
-                    todoViewModel.getAvailableTodos()
                 }
             }
             .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
@@ -128,7 +129,6 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
             .setTitle("Are you sure you want to delete?")
             .setPositiveButton("Delete"){_, _->
                 todoViewModel.deleteTodo(todo)
-                todoViewModel.getAvailableTodos()
             }
             .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
             }

@@ -9,8 +9,7 @@ import com.example.todos.db.Repository
 import com.example.todos.pojo.User
 import kotlinx.coroutines.launch
 
-
-class UserViewModel(private val repository: Repository): ViewModel() {
+class UserViewModel (private val repository: Repository): ViewModel() {
 
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users

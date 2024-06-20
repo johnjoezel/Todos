@@ -18,7 +18,11 @@ import com.example.todos.MainApplication
 import com.example.todos.R
 import com.example.todos.databinding.ActivitySignInBinding
 import com.example.todos.db.AppDatabase
+import com.example.todos.db.Repository
+import com.example.todos.others.RetrofitInstance
 import com.example.todos.viewModels.AuthViewModel
+import com.example.todos.viewModels.TodoViewModel
+import com.example.todos.viewmodelfactory.TodoViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -51,7 +55,9 @@ class SignInActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         val db = AppDatabase.getInstance(applicationContext)
         val userDao = db.userDao()
+        val todoDao = db.todoDao()
         val repository = AuthRepository(userDao)
+        val todoRepository = Repository(todoDao,userDao, RetrofitInstance.userApi)
         val viewModelFactory = AuthViewModelFactory(repository)
         authViewModel = ViewModelProvider(this, viewModelFactory)[AuthViewModel::class.java]
 
@@ -59,6 +65,9 @@ class SignInActivity : AppCompatActivity() {
             if(user!=null){
                 val userId = user.userId
                 saveLoginStatus(true, userId)
+                val todoViewModelFactory = TodoViewModelFactory(todoRepository,userId)
+                val todoViewModel = ViewModelProvider(this, todoViewModelFactory)[TodoViewModel::class.java]
+                todoViewModel.fetchTodoFromApiOneTime()
                 lifecycleScope.launch {
                     delay(500L)
                     MainApplication.showToastMessage("Signing In")
@@ -74,6 +83,7 @@ class SignInActivity : AppCompatActivity() {
             }
         }
 
+        //when button signin is clicked
         binding.btnSignin.setOnClickListener{
             val username = binding.etUsername.text.toString()
             val password = binding.etPassword.text.toString()

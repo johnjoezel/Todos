@@ -21,11 +21,13 @@ interface TodoDao {
     suspend fun insertTodo(todo: Todo)
 
     @Query("SELECT * FROM todos WHERE userId = :userId AND completed = 0")
-    suspend fun getAvailableTodos(userId : Int): List<Todo>
+    fun getAvailableTodos(userId : Int): LiveData<List<Todo>>
 
     @Query("SELECT * FROM todos WHERE userId = :userId AND completed = 1")
-    suspend fun getCompletedTodos(userId : Int): List<Todo>
+    fun getCompletedTodos(userId : Int): LiveData<List<Todo>>
 
+    @Query("SELECT * FROM todos WHERE userId = :userId")
+    fun getUsersTodo(userId: Int) : LiveData<List<Todo>>
     @Transaction
     @Delete
     suspend fun deleteTodo(todo : Todo)

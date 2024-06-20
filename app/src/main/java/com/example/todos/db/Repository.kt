@@ -12,6 +12,7 @@ import java.net.UnknownHostException
 class Repository(private val todoDao: TodoDao, private val userDao: UserDao, private val remoteApi: RemoteApi) {
 
     val users: LiveData<User> = userDao.getUsers()
+
     suspend fun fetchAndStoreUsers(){
         if (users.value == null) {
             val usersFromApi = remoteApi.getAllUsersFromApi()
@@ -44,12 +45,15 @@ class Repository(private val todoDao: TodoDao, private val userDao: UserDao, pri
             userId = todo.userId
         )
     }
-    suspend fun fetchTodos(userId: Int) {
+    suspend fun fetchTodos(userId: Int){
         try{
-            val todosFromApi = remoteApi.getAllTodosFromApi(userId)
-            if(todosFromApi.todos.isNotEmpty()){
-                val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
-                todoDao.insertAllTodos(storeTheTodos)
+            val todos = todoDao.getUsersTodo(userId)
+            if(todos.value == null){
+                val todosFromApi = remoteApi.getAllTodosFromApi(userId)
+                if(todosFromApi.todos.isNotEmpty()){
+                    val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
+                    todoDao.insertAllTodos(storeTheTodos)
+                }
             }
         } catch (e: HttpException) {
             // new user can't be added to dummyjson
@@ -68,10 +72,10 @@ class Repository(private val todoDao: TodoDao, private val userDao: UserDao, pri
         todoDao.deleteTodo(todo)
     }
 
-    suspend fun getAvailableTodos(userId : Int) : List<Todo>{
+    fun getAvailableTodos(userId : Int) : LiveData<List<Todo>>{
         return todoDao.getAvailableTodos(userId)
     }
-    suspend fun getCompletedTodos(userId : Int) : List<Todo>{
+    fun getCompletedTodos(userId : Int) : LiveData<List<Todo>>{
         return todoDao.getCompletedTodos(userId)
     }
 

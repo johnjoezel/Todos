@@ -61,7 +61,6 @@ class CompletedTaskFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        todoViewModel.getCompletedTodos()
         prepareRecyclerView()
         observerToDoLiveData()
     }
@@ -78,9 +77,7 @@ class CompletedTaskFragment : Fragment() {
             binding.circularProgress.visibility = View.GONE
             todoViewModel.completedTodos.observe(viewLifecycleOwner
             ) { todos ->
-                if(todos.isEmpty() && todos != null){
-                    MainApplication.showToastMessage("No Todo Available")
-                } else {
+                if(todos.isNotEmpty()){
                     todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
                 }
             }
