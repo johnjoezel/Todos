@@ -1,9 +1,6 @@
 package com.example.todos.fragments
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,43 +10,37 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todos.MainApplication
-import com.example.todos.db.Repository
-import com.example.todos.viewmodelfactory.TodoViewModelFactory
-import com.example.todos.activity.auth.SignInActivity
+import com.example.todos.SharedPreferenceHelper
 import com.example.todos.adapters.OnButtonClickListener
 import com.example.todos.adapters.TodoAdapter
 import com.example.todos.databinding.FragmentMyTaskBinding
 import com.example.todos.db.AppDatabase
-import com.example.todos.others.RetrofitInstance
 import com.example.todos.pojo.Todo
 import com.example.todos.viewModels.TodoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class MyTaskFragment : Fragment(), OnButtonClickListener {
 
     private val TAG = "MyTaskFragment"
 
     private lateinit var binding: FragmentMyTaskBinding
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var todoViewModel: TodoViewModel
     private val todoAdapter = TodoAdapter()
-    private var userId : Int = 0
+    private lateinit var todoViewModel: TodoViewModel
+
+    @Inject
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+    @Inject
+    lateinit var appDatabase: AppDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
-        userId = sharedPreferences.getInt(SignInActivity.PREF_KEY_USER_ID,-1)
-        val db = AppDatabase.getInstance(requireContext())
-        val userDao = db.userDao()
-        val todoDao = db.todoDao()
-        val repository = Repository(todoDao,userDao, RetrofitInstance.userApi)
-        val todoViewModelFactory = TodoViewModelFactory(repository, userId)
-        todoViewModel = ViewModelProvider(this, todoViewModelFactory)[TodoViewModel::class.java]
+        todoViewModel = ViewModelProvider(this)[TodoViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -110,7 +101,7 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
                 val todoDesc = inputbox.text.toString()
                 val todo = Todo(completed = false,
                     todo = todoDesc,
-                    userId = userId)
+                    userId = sharedPreferenceHelper.userId)
                 lifecycleScope.launch {
                     binding.circularProgress.visibility = View.VISIBLE
                     delay(1000L)
@@ -140,7 +131,7 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Please confirm")
             .setPositiveButton("Complete"){_, _->
-                val completeTodo = Todo(todo.id, todo.todo, completed = true, userId)
+                val completeTodo = Todo(todo.id, todo.todo, completed = true, sharedPreferenceHelper.userId)
                 todoViewModel.insertTodo(completeTodo)
             }
             .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()

@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todos.db.Repository
 import com.example.todos.pojo.Todo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TodoViewModel(private val repository: Repository, private val userId: Int):ViewModel() {
+@HiltViewModel
+class TodoViewModel @Inject constructor(private val repository: Repository, private val userId: Int):ViewModel() {
 
     val availableTodos : LiveData<List<Todo>> = repository.getAvailableTodos(userId)
     val completedTodos : LiveData<List<Todo>> = repository.getCompletedTodos(userId)

@@ -1,45 +1,29 @@
 package com.example.todos.fragments
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import com.example.todos.SharedPreferenceHelper
 import com.example.todos.activity.auth.SignInActivity
-import com.example.todos.adapters.AllTodoAdapter
-import com.example.todos.adapters.TodoAdapter
-import com.example.todos.databinding.FragmentMyTaskBinding
 import com.example.todos.databinding.FragmentSettingsBinding
-import com.example.todos.db.AppDatabase
-import com.example.todos.db.Repository
-import com.example.todos.others.RetrofitInstance
-import com.example.todos.viewModels.TodoViewModel
-import com.example.todos.viewmodelfactory.TodoViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var todoViewModel: TodoViewModel
-    private var userId : Int = 0
 
+    @Inject
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
-        userId = sharedPreferences.getInt(SignInActivity.PREF_KEY_USER_ID,-1)
-        val db = AppDatabase.getInstance(requireContext())
-        val userDao = db.userDao()
-        val todoDao = db.todoDao()
-        val repository = Repository(todoDao,userDao, RetrofitInstance.userApi)
-        val todoViewModelFactory = TodoViewModelFactory(repository, userId)
-        todoViewModel = ViewModelProvider(this, todoViewModelFactory)[TodoViewModel::class.java]
+
     }
 
     override fun onCreateView(
@@ -78,11 +62,7 @@ class SettingsFragment : Fragment() {
         alertDialog.show()
     }
     private fun logout() {
-        val sharedPreferences = requireActivity().getSharedPreferences(SignInActivity.PREF_NAME, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(SignInActivity.PREF_KEY_IS_LOGGED_IN, false)
-        editor.remove(SignInActivity.PREF_KEY_USER_ID)
-        editor.apply()
+        sharedPreferenceHelper.clear()
         redirectToLogin()
     }
 

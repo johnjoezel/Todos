@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.todos.pojo.Todo
-import com.example.todos.pojo.TodoResponse
 
 
 @Dao

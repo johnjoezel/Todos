@@ -1,9 +1,7 @@
 package com.example.todos.activity.auth
 
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -11,36 +9,38 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.todos.db.AuthRepository
-import com.example.todos.viewmodelfactory.AuthViewModelFactory
 import com.example.todos.MainActivity
 import com.example.todos.MainApplication
 import com.example.todos.R
+import com.example.todos.SharedPreferenceHelper
 import com.example.todos.databinding.ActivitySignInBinding
 import com.example.todos.db.AppDatabase
-import com.example.todos.db.Repository
-import com.example.todos.others.RetrofitInstance
 import com.example.todos.viewModels.AuthViewModel
 import com.example.todos.viewModels.TodoViewModel
-import com.example.todos.viewmodelfactory.TodoViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignInActivity : AppCompatActivity() {
 
-    companion object {
-        const val PREF_NAME = "MyPrefs"
-        const val PREF_KEY_USER_ID = "userId"
-        const val PREF_KEY_IS_LOGGED_IN = "isLoggedIn"
-    }
 
     private lateinit var binding: ActivitySignInBinding
+    private lateinit var todoViewModel: TodoViewModel
     private lateinit var authViewModel: AuthViewModel
-    private lateinit var sharedPreferences: SharedPreferences
+
+    @Inject
+    lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
+    @Inject
+    lateinit var appDatabase: AppDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
 
+        todoViewModel = ViewModelProvider(this)[TodoViewModel::class.java]
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         //check if user is already logged in
         if(isLoggedin()){
             redirectToMain()
@@ -53,20 +53,11 @@ class SignInActivity : AppCompatActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-        val db = AppDatabase.getInstance(applicationContext)
-        val userDao = db.userDao()
-        val todoDao = db.todoDao()
-        val repository = AuthRepository(userDao)
-        val todoRepository = Repository(todoDao,userDao, RetrofitInstance.userApi)
-        val viewModelFactory = AuthViewModelFactory(repository)
-        authViewModel = ViewModelProvider(this, viewModelFactory)[AuthViewModel::class.java]
 
         authViewModel.loginUser.observe(this){ user ->
             if(user!=null){
                 val userId = user.userId
                 saveLoginStatus(true, userId)
-                val todoViewModelFactory = TodoViewModelFactory(todoRepository,userId)
-                val todoViewModel = ViewModelProvider(this, todoViewModelFactory)[TodoViewModel::class.java]
                 todoViewModel.fetchTodoFromApiOneTime()
                 lifecycleScope.launch {
                     delay(500L)
@@ -110,7 +101,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun isLoggedin(): Boolean {
-        return getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).getBoolean(PREF_KEY_IS_LOGGED_IN, false)
+        return sharedPreferenceHelper.isLoggedIn
     }
 
     private fun showExitConfirmationDialog() {
@@ -142,10 +133,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun saveLoginStatus(isLoggedIn: Boolean, userId: Int) {
-        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(PREF_KEY_IS_LOGGED_IN, isLoggedIn)
-        editor.putInt(PREF_KEY_USER_ID, userId)
-        editor.apply()
+        sharedPreferenceHelper.isLoggedIn = isLoggedIn
+        sharedPreferenceHelper.userId = userId
     }
 }

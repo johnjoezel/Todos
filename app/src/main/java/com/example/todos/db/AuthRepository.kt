@@ -1,9 +1,9 @@
 package com.example.todos.db
 
-import com.example.todos.db.UserDao
 import com.example.todos.pojo.User
+import javax.inject.Inject
 
-class AuthRepository(private val userDao: UserDao) {
+class AuthRepository @Inject constructor(private val userDao: UserDao) {
 
     suspend fun signInUser(username: String, password: String): User {
         return userDao.getUser(username, password)

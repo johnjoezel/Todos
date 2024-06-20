@@ -8,15 +8,16 @@ import com.example.todos.pojo.Todo
 import com.example.todos.pojo.User
 import retrofit2.HttpException
 import java.net.UnknownHostException
+import javax.inject.Inject
 
-class Repository(private val todoDao: TodoDao, private val userDao: UserDao, private val remoteApi: RemoteApi) {
+class Repository @Inject constructor(private val todoDao: TodoDao, private val userDao: UserDao, private val remoteApi: RemoteApi) {
 
     val users: LiveData<User> = userDao.getUsers()
 
     suspend fun fetchAndStoreUsers(){
         if (users.value == null) {
             val usersFromApi = remoteApi.getAllUsersFromApi()
-            val storeThereUsers = usersFromApi.users.map { mapToUser(it) }
+            val storeThereUsers = usersFromApi.map { mapToUser(it) }
             userDao.insertAll(storeThereUsers)
         }
     }
@@ -50,8 +51,8 @@ class Repository(private val todoDao: TodoDao, private val userDao: UserDao, pri
             val todos = todoDao.getUsersTodo(userId)
             if(todos.value == null){
                 val todosFromApi = remoteApi.getAllTodosFromApi(userId)
-                if(todosFromApi.todos.isNotEmpty()){
-                    val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
+                if(todosFromApi.isNotEmpty()){
+                    val storeTheTodos = todosFromApi.map{ mapToTodo(it)}
                     todoDao.insertAllTodos(storeTheTodos)
                 }
             }

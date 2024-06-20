@@ -8,30 +8,30 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.todos.MainApplication
 import com.example.todos.R
-import com.example.todos.db.AuthRepository
-import com.example.todos.viewmodelfactory.AuthViewModelFactory
 import com.example.todos.databinding.ActivitySignUpBinding
 import com.example.todos.db.AppDatabase
 import com.example.todos.pojo.User
 import com.example.todos.viewModels.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var authViewModel: AuthViewModel
+
+    @Inject
+    lateinit var appDatabase: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val db = AppDatabase.getInstance(applicationContext)
-        val userDao = db.userDao()
-        val repository = AuthRepository(userDao)
-        val viewModelFactory = AuthViewModelFactory(repository)
-        authViewModel = ViewModelProvider(this, viewModelFactory)[AuthViewModel::class.java]
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
 
         binding.btnSignup.setOnClickListener{
             verifyUserData()
