@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/myTaskFragment"
-        android:name="com.example.todos.fragments.MyTaskFragment"
+        android:name="com.example.todos.ui.fragments.MyTaskFragment"
         android:label="fragment_my_task"
         tools:layout="@layout/fragment_my_task" />
     <fragment
         android:id="@+id/completedTaskFragment"
-        android:name="com.example.todos.fragments.CompletedTaskFragment"
+        android:name="com.example.todos.ui.fragments.CompletedTaskFragment"
         android:label="fragment_completed_task"
         tools:layout="@layout/fragment_completed_task" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.todos.fragments.SettingsFragment"
+        android:name="com.example.todos.ui.fragments.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>

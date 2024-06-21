@@ -2,13 +2,13 @@ package com.example.todos.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.todos.SharedPreferenceHelper
-import com.example.todos.apis.RemoteApi
-import com.example.todos.db.AppDatabase
-import com.example.todos.db.AuthRepository
-import com.example.todos.db.Repository
-import com.example.todos.db.TodoDao
-import com.example.todos.db.UserDao
+import com.example.todos.util.helper.SharedPreferenceHelper
+import com.example.todos.data.remote.RemoteApi
+import com.example.todos.data.local.AppDatabase
+import com.example.todos.data.repositories.AuthRepository
+import com.example.todos.data.repositories.Repository
+import com.example.todos.data.local.TodoDao
+import com.example.todos.data.local.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +25,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMyApi() : RemoteApi{
+    fun provideMyApi() : RemoteApi {
         return Retrofit.Builder()
             .baseUrl("https://dummyjson.com/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -35,7 +35,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context) : AppDatabase{
+    fun provideAppDatabase(@ApplicationContext context: Context) : AppDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java, "todoappdb.db"
@@ -45,7 +45,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoDao(appDatabase: AppDatabase) : TodoDao{
+    fun provideTodoDao(appDatabase: AppDatabase) : TodoDao {
         return appDatabase.todoDao()
     }
 
@@ -57,13 +57,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMyRepository(remoteApi : RemoteApi, todoDao: TodoDao, userDao: UserDao) : Repository{
+    fun provideMyRepository(remoteApi : RemoteApi, todoDao: TodoDao, userDao: UserDao) : Repository {
         return Repository(todoDao,userDao, remoteApi)
     }
 
     @Provides
     @Singleton
-    fun provideAuthRepository(userDao: UserDao) : AuthRepository{
+    fun provideAuthRepository(userDao: UserDao) : AuthRepository {
         return AuthRepository(userDao)
     }
 
@@ -76,7 +76,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferenceHelper(@ApplicationContext context: Context) : SharedPreferenceHelper{
+    fun provideSharedPreferenceHelper(@ApplicationContext context: Context) : SharedPreferenceHelper {
         return SharedPreferenceHelper(context)
     }
 
