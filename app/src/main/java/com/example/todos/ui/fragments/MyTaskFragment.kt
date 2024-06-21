@@ -138,5 +138,4 @@ class MyTaskFragment : Fragment(), OnButtonClickListener {
             .create()
         dialog.show()
     }
-
 }

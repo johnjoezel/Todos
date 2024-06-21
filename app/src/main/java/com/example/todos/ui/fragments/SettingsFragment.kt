@@ -62,7 +62,8 @@ class SettingsFragment : Fragment() {
         alertDialog.show()
     }
     private fun logout() {
-        sharedPreferenceHelper.clear()
+        sharedPreferenceHelper.remove(SharedPreferenceHelper.PREF_KEY_USER_ID)
+        sharedPreferenceHelper.remove(SharedPreferenceHelper.PREF_KEY_IS_LOGGED_IN)
         redirectToLogin()
     }
 

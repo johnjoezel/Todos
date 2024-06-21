@@ -4,9 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
 
-class SharedPreferenceHelper @Inject constructor(context : Context) {
-    private val sharedPreferences: SharedPreferences = context.applicationContext.getSharedPreferences(
-        PREF_NAME, Context.MODE_PRIVATE)
+class SharedPreferenceHelper @Inject constructor(private val sharedPreferences: SharedPreferences) {
+
     private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     companion object {

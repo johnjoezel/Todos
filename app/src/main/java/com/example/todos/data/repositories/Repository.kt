@@ -3,6 +3,7 @@ package com.example.todos.data.repositories
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.todos.MainApplication
 import com.example.todos.data.remote.RemoteApi
 import com.example.todos.data.pojo.Todo
 import com.example.todos.data.pojo.User
@@ -18,9 +19,14 @@ class Repository @Inject constructor(private val todoDao: TodoDao, private val u
 
     suspend fun fetchAndStoreUsers(){
         if (users.value == null) {
-            val usersFromApi = remoteApi.getAllUsersFromApi()
-            val storeThereUsers = usersFromApi.map { mapToUser(it) }
-            userDao.insertAll(storeThereUsers)
+            try{
+                val usersFromApi = remoteApi.getAllUsersFromApi()
+                val storeThereUsers = usersFromApi.users.map { mapToUser(it) }
+                userDao.insertAll(storeThereUsers)
+            } catch (e:Exception){
+                MainApplication.showToastMessage(e.message.toString())
+            }
+
         }
     }
 
@@ -53,21 +59,17 @@ class Repository @Inject constructor(private val todoDao: TodoDao, private val u
             val todos = todoDao.getUsersTodo(userId)
             if(todos.value == null){
                 val todosFromApi = remoteApi.getAllTodosFromApi(userId)
-                if(todosFromApi.isNotEmpty()){
-                    val storeTheTodos = todosFromApi.map{ mapToTodo(it)}
-                    todoDao.insertAllTodos(storeTheTodos)
-                }
+                val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
+                todoDao.insertAllTodos(storeTheTodos)
             }
         } catch (e: HttpException) {
-            // new user can't be added to dummyjson
-            Log.e(TAG, "HTTP error: ${e.code()}")
-            // Handle specific error code if needed
+            MainApplication.showToastMessage(e.message.toString())
         } catch (e: UnknownHostException) {
             // Handle network unavailable
-            Log.e(TAG, "Network error: ${e.message}")
+            MainApplication.showToastMessage(e.message.toString())
         } catch (e: Exception) {
             // Handle other errors
-            Log.e(TAG, "Error fetching todos: ${e.message}", e)
+            MainApplication.showToastMessage(e.message.toString())
         }
     }
 

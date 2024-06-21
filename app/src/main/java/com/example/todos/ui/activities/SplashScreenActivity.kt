@@ -49,7 +49,6 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
     private fun isSplashScreenShown() : Boolean{
-        val sharedPreferenceHelper = SharedPreferenceHelper(this)
        return sharedPreferenceHelper.isSplashScreenShown
     }
 

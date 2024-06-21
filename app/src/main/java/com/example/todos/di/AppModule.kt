@@ -1,6 +1,7 @@
 package com.example.todos.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.data.remote.RemoteApi
@@ -69,15 +70,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserId(@ApplicationContext context: Context) : Int{
-        val sharedPreferenceHelper = SharedPreferenceHelper(context)
-        return sharedPreferenceHelper.userId
+    fun provideSharedPreference(@ApplicationContext context: Context) : SharedPreferences{
+        val sharedPreferences = context.applicationContext.getSharedPreferences(SharedPreferenceHelper.PREF_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences
     }
 
     @Provides
     @Singleton
-    fun provideSharedPreferenceHelper(@ApplicationContext context: Context) : SharedPreferenceHelper {
-        return SharedPreferenceHelper(context)
+    fun provideSharedPreferenceHelper(sharedPreferences: SharedPreferences) : SharedPreferenceHelper{
+        return SharedPreferenceHelper(sharedPreferences)
     }
 
 }
