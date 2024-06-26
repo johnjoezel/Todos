@@ -2,32 +2,42 @@ package com.example.todos.ui.activities
 
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.todos.MainApplication
 import com.example.todos.R
-import com.example.todos.util.helper.SharedPreferenceHelper
-import com.example.todos.databinding.ActivitySignInBinding
 import com.example.todos.data.local.AppDatabase
+import com.example.todos.data.pojo.User
+import com.example.todos.databinding.ActivitySignInBinding
+import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.viewmodels.AuthViewModel
 import com.example.todos.viewmodels.TodoViewModel
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SignInActivity : AppCompatActivity() {
+class  SignInActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivitySignInBinding
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var databaseReference: DatabaseReference
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
@@ -38,20 +48,31 @@ class SignInActivity : AppCompatActivity() {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
 
+
         todoViewModel = ViewModelProvider(this)[TodoViewModel::class.java]
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         //check if user is already logged in
-        if(isLoggedin()){
+        if(sharedPreferenceHelper.isLoggedIn){
             redirectToMain()
+        } else {
+            setContentView(binding.root)
+            clickListeners()
+            observers()
+            backPressed()
         }
+    }
 
-        setContentView(binding.root)
+    private fun backPressed() {
         val onBackPressedCallback = object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 showExitConfirmationDialog()
             }
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+    }
+
+
+    private fun observers() {
 
         authViewModel.loginUser.observe(this){ user ->
             if(user!=null){
@@ -72,7 +93,9 @@ class SignInActivity : AppCompatActivity() {
                 MainApplication.showToastMessage(getString(R.string.invalidCredentials))
             }
         }
+    }
 
+    private fun clickListeners() {
         //when button signin is clicked
         binding.btnSignin.setOnClickListener{
             val username = binding.etUsername.text.toString()
@@ -97,10 +120,6 @@ class SignInActivity : AppCompatActivity() {
         binding.tvSignup.setOnClickListener{
             redirectToSignUp()
         }
-    }
-
-    private fun isLoggedin(): Boolean {
-        return sharedPreferenceHelper.isLoggedIn
     }
 
     private fun showExitConfirmationDialog() {

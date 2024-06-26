@@ -33,6 +33,8 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
         }
     }
 
+
+
     fun signUp(user : User){
         viewModelScope.launch {
             try{

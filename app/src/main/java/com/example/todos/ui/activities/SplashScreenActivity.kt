@@ -24,7 +24,6 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivitySplashScreenBinding
-
     private lateinit var userViewModel: UserViewModel
 
     @Inject

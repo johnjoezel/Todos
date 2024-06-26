@@ -42,7 +42,7 @@
                     android:layout_weight="3"
                     android:fontFamily="@font/myfont"
                     android:text="Completed Tasks"
-                    android:textColor="@color/accent"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/_20ssp"
                     android:textStyle="bold" />
 

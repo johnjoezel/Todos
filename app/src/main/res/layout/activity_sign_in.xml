@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="TODO"
         android:fontFamily="@font/myfont"
-        android:textColor="@color/accent"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_50sdp"
         android:letterSpacing="0.5"
         android:layout_marginTop="@dimen/_100sdp"
@@ -102,11 +102,11 @@
         android:textSize="@dimen/_15sdp"
         android:textColor="@color/white"
         android:text="Sign In"
-        android:backgroundTint="@color/accent"
+        android:backgroundTint="@color/colorPrimary"
         android:layout_marginTop="@dimen/_20sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutpassword"  />
+        app:layout_constraintTop_toBottomOf="@id/layoutpassword"/>
 
     <TextView
         android:id="@+id/tv_signup"
@@ -116,7 +116,7 @@
         android:textSize="@dimen/_13sdp"
         android:fontFamily="@font/myfont"
         android:text="@string/signuplink"
-        android:textColor="@color/link"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

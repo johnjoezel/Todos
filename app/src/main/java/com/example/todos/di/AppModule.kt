@@ -10,6 +10,10 @@ import com.example.todos.data.repositories.AuthRepository
 import com.example.todos.data.repositories.Repository
 import com.example.todos.data.local.TodoDao
 import com.example.todos.data.local.UserDao
+import com.google.firebase.Firebase
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -80,5 +84,4 @@ object AppModule {
     fun provideSharedPreferenceHelper(sharedPreferences: SharedPreferences) : SharedPreferenceHelper{
         return SharedPreferenceHelper(sharedPreferences)
     }
-
 }

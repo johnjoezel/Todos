@@ -11,28 +11,54 @@
             android:id="@+id/tv_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
             android:fontFamily="@font/myfont"
             android:text="Account Settings"
-            android:textColor="@color/accent"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/_20ssp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_userProfImage"
+            android:layout_width="200sp"
+            android:layout_height="200sp"
+            android:scaleType="center"
             android:layout_marginTop="@dimen/_30sdp"
-            android:layout_marginStart="@dimen/_20sdp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:src="@drawable/baseline_person_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_home"
+            app:shapeAppearanceOverlay="@style/Circular"/>
 
         <TextView
             android:id="@+id/tv_logout"
-            android:text="Logout"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textColor="#ff0000"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
             android:fontFamily="@font/myfont"
             android:gravity="center"
+            android:text="Logout"
+            android:textColor="#ff0000"
             android:textSize="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_30sdp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_home"
             app:layout_constraintStart_toStartOf="@+id/tv_home"
-            app:layout_constraintTop_toBottomOf="@+id/tv_home"/>
+            app:layout_constraintTop_toBottomOf="@+id/iv_userProfImage" />
 
+        <Button
+            android:id="@+id/btn_saveProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/_15sdp"
+            android:textColor="@color/white"
+            android:text="Save"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_marginBottom="@dimen/_40sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 package com.example.todos.data.repositories
 
-import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.todos.MainApplication
@@ -9,41 +9,55 @@ import com.example.todos.data.pojo.Todo
 import com.example.todos.data.pojo.User
 import com.example.todos.data.local.TodoDao
 import com.example.todos.data.local.UserDao
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
 class Repository @Inject constructor(private val todoDao: TodoDao, private val userDao: UserDao, private val remoteApi: RemoteApi) {
 
-    val users: LiveData<User> = userDao.getUsers()
+    private val users: LiveData<User> = userDao.getUsers()
 
     suspend fun fetchAndStoreUsers(){
         if (users.value == null) {
-            try{
+            withContext(Dispatchers.IO){
                 val usersFromApi = remoteApi.getAllUsersFromApi()
-                val storeThereUsers = usersFromApi.users.map { mapToUser(it) }
-                userDao.insertAll(storeThereUsers)
-            } catch (e:Exception){
-                MainApplication.showToastMessage(e.message.toString())
+                val storeTheUsers = usersFromApi.users.map { mapToUser(it) }
+                userDao.insertAll(storeTheUsers)
+                
             }
 
         }
     }
 
+    suspend fun fetchUser(userId : Int) : User{
+        return userDao.getUser(userId)
+    }
+    suspend fun updateUser(userId: Int, imageUri : Uri?){
+        userDao.updateUser(userId, imageUri)
+    }
     private fun mapToUser(user: User): User {
         return User(
             userId = user.userId,
-            firstName = user.firstName,
-            lastName = user.lastName,
-            gender = user.gender,
-            email = user.email,
             username = user.username,
-            password = user.password,
+            password = user.password
         )
     }
 
+
+
+    // TODOS PART//
     suspend fun insertTodo(todo : Todo){
-        return todoDao.insertTodo(todo)
+        withContext(Dispatchers.IO){
+            todoDao.insertTodo(todo)
+
+//            val response = remoteApi.insertTodo(todo)
+        }
+
+
     }
 
     private fun mapToTodo(todo: Todo) : Todo {
@@ -54,6 +68,9 @@ class Repository @Inject constructor(private val todoDao: TodoDao, private val u
             userId = todo.userId
         )
     }
+
+
+
     suspend fun fetchTodos(userId: Int){
         try{
             val todos = todoDao.getUsersTodo(userId)

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="TODO"
         android:fontFamily="@font/myfont"
-        android:textColor="@color/accent"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_50sdp"
         android:letterSpacing="0.5"
         android:layout_marginTop="@dimen/_100sdp"
