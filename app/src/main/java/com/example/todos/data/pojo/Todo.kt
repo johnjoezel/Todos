@@ -1,6 +1,5 @@
 package com.example.todos.data.pojo
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey

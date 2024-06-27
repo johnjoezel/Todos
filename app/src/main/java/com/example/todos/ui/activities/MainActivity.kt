@@ -1,5 +1,6 @@
 package com.example.todos.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
@@ -59,24 +60,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onFabClick() {
-        binding.btnAddTask.setOnClickListener{
-            val inputbox = EditText(this)
-            val dialog = AlertDialog.Builder(this)
-                .setTitle("Enter todo")
-                .setView(inputbox)
-                .setPositiveButton("OK"){_, _->
-                    val todoDesc = inputbox.text.toString()
-                    val todo = Todo(completed = false,
-                        todo = todoDesc,
-                        userId = sharedPreferenceHelper.userId)
-                    lifecycleScope.launch {
-                        todoViewModel.insertTodo(todo)
-                    }
-                }
-                .setNegativeButton("Cancel"){dialog, _ -> dialog.cancel()
-                }
-                .create()
-            dialog.show()
+        binding.btnAddTaskActivity.setOnClickListener{
+            val intent = Intent(this, AddTaskActivity::class.java)
+            startActivity(intent)
         }
+
     }
 }

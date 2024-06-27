@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todos.data.pojo.Todo
 import com.example.todos.databinding.RecentTaskItemBinding
 
-class RecentTaskAdapater : RecyclerView.Adapter<RecentTaskAdapater.RecentTaskViewHolder>() {
+class RecentTaskAdapater() : RecyclerView.Adapter<RecentTaskAdapater.RecentTaskViewHolder>() {
     private var todoList = ArrayList<Todo>()
 
     fun setToDoList(todoList:ArrayList<Todo>){

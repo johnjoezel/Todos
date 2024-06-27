@@ -3,6 +3,7 @@
     <string name="signinlink">Already have an account? Sign in!</string>
     <string name="signuplink">Don\'t have an account? <b>Sign Up!</b></string>
     <string name="createaccount">Create Account</string>
+    <string name="createnewtask">New Task</string>
     <string name="EULA">I agree to privacy policy &amp; terms</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

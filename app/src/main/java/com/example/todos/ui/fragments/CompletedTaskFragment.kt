@@ -1,34 +1,35 @@
 package com.example.todos.ui.fragments
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todos.ui.adapters.TodoAdapter
-import com.example.todos.databinding.FragmentCompletedTaskBinding
+import com.example.todos.R
 import com.example.todos.data.local.AppDatabase
-import com.example.todos.data.pojo.Todo
+import com.example.todos.databinding.FragmentCompletedTaskBinding
+import com.example.todos.ui.adapters.HorizontalCalendarAdapter
+import com.example.todos.ui.horizontalcalendar.HorizontalCalendarSetUp
 import com.example.todos.viewmodels.TodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CompletedTaskFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 @AndroidEntryPoint
-class CompletedTaskFragment : Fragment() {
+class CompletedTaskFragment : Fragment(), HorizontalCalendarAdapter.OnItemClickListener{
 
     private lateinit var binding: FragmentCompletedTaskBinding
-    private val todoAdapter = TodoAdapter()
-
     private lateinit var todoViewModel: TodoViewModel
 
     @Inject
@@ -47,28 +48,30 @@ class CompletedTaskFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         prepareRecyclerView()
-        observerToDoLiveData()
+        val calendarSetup = HorizontalCalendarSetUp()
+        val tvMonth = calendarSetup.setUpCalendarAdapter(binding.recyclerView, this)
+        binding.textDateMonth.text = tvMonth
+
+        calendarSetup.setUpCalendarPrevNextClickListener(binding.ivCalendarNext,binding.ivCalendarPrevious, this){
+            binding.textDateMonth.text = it
+        }
+
     }
 
     private fun prepareRecyclerView() {
-        binding.rvCompletedtodos.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = todoAdapter
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
-    private fun observerToDoLiveData() {
-        lifecycleScope.launch {
-            delay(1000L)
-            binding.circularProgress.visibility = View.GONE
-            todoViewModel.completedTodos.observe(viewLifecycleOwner
-            ) { todos ->
-                if(todos.isNotEmpty()){
-                    todoAdapter.setToDoList(todoList = todos as ArrayList<Todo>)
-                }
-            }
-        }
+
+    override fun onItemClick(position : Int) {
+        binding.recyclerView.smoothScrollToPosition(26)
+        Log.d("imhere", "onItemClick: ${position}")
     }
+
+    // Method to simulate item click programmatically
 }

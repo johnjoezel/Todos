@@ -25,19 +25,22 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:menu="@menu/bottomnav"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
         android:background="@color/colorTertiary" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_addTask"
+        android:id="@+id/btn_addTaskActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_add"
         android:scaleType="center"
-        app:strokeWidth="10dp"
-        app:strokeColor="@color/colorTertiary"
+        app:tint="@color/white"
         app:layout_anchorGravity="center|top"
         app:layout_anchor="@id/bottomnav"
+        app:borderWidth="5dp"
+        app:backgroundTint="@color/white"
         android:contentDescription="appbar"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle"/>
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialComponents.FloatingActionButton"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

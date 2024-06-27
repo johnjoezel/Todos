@@ -8,8 +8,7 @@
          <item name="colorSurface">@color/color_surface</item>
 
     </style>
-    <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
-        <item name="cornerFamily">rounded</item>
+    <style name="CircularShapeWithborder" parent="ShapeAppearanceOverlay.MaterialComponents.FloatingActionButton">
         <item name="cornerSize">50%</item>
     </style>
     <style name="Theme.Todos" parent="Base.Theme.Todos" />

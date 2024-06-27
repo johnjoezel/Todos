@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/myTaskFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/myTaskFragment"
-        android:name="com.example.todos.ui.fragments.MyTaskFragment"
-        android:label="fragment_my_task"
-        tools:layout="@layout/fragment_my_task" />
+        android:id="@+id/homeFragment"
+        android:name="com.example.todos.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/completedTaskFragment"
         android:name="com.example.todos.ui.fragments.CompletedTaskFragment"
@@ -20,4 +20,9 @@
         android:name="com.example.todos.ui.fragments.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/myTaskFragment"
+        android:name="com.example.todos.ui.fragments.MyTaskFragment"
+        android:label="fragment_my_task"
+        tools:layout="@layout/fragment_my_task" />
 </navigation>
