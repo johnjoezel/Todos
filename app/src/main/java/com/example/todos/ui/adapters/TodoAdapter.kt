@@ -60,7 +60,6 @@ class TodoAdapter:RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
         val currenttodo = todoList[position]
         holder.binding.tvTask.text = currenttodo.todo
         holder.bind(currenttodo)
-
     }
 
 

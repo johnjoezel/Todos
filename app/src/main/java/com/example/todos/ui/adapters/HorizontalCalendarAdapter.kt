@@ -1,85 +1,51 @@
 package com.example.todos.ui.adapters
 
-import android.annotation.SuppressLint
-import android.icu.util.Calendar
-import android.os.Build
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todos.R
 import com.example.todos.databinding.ItemCalendarDateBinding
-import com.example.todos.ui.horizontalcalendar.CalendarDateModel
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.example.todos.ui.listeners.OnClickListener
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class HorizontalCalendarAdapter(private val listener: (calendarDateModel: CalendarDateModel, position: Int) -> Unit) : RecyclerView.Adapter<HorizontalCalendarAdapter.CalendarViewHolder>() {
+class HorizontalCalendarAdapter(private val dates: List<Date>): RecyclerView.Adapter<HorizontalCalendarAdapter.CalendarViewHolder>() {
 
-    var list = ArrayList<CalendarDateModel>()
-    private var adapterPosition = -1
-
-    interface OnItemClickListener{
-        fun onItemClick(position: Int)
+    private var onClickListener :OnClickListener? = null
+    fun setOnClickListener(listener: OnClickListener) {
+        onClickListener = listener
     }
 
-    private var mListener: OnItemClickListener? = null
-    fun setOnItemClickListener(listener: OnItemClickListener){
-        mListener = listener
-    }
+    inner class CalendarViewHolder(val binding : ItemCalendarDateBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(date: Date) {
+            val formattedDayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(date)
+            val formattedDayOfMonth = SimpleDateFormat("dd", Locale.getDefault()).format(date)
+            binding.tvCalendarDate.text = formattedDayOfMonth.format(date)
+            binding.tvCalendarDay.text = formattedDayOfWeek.format(date)
 
-    inner class CalendarViewHolder(val binding : ItemCalendarDateBinding) : RecyclerView.ViewHolder(binding.root)
+            binding.linearCalendar.setOnClickListener{
+                binding.linearCalendar.setBackgroundColor(Color.parseColor("#F26E56"))
+                binding.tvCalendarDate.setTextColor(Color.WHITE)
+                binding.tvCalendarDay.setTextColor(Color.WHITE)
+                onClickListener?.onDateClicked(date)
+            }
+        }
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         return CalendarViewHolder(ItemCalendarDateBinding.inflate(LayoutInflater.from(parent.context), parent,false))
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return dates.size
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: CalendarViewHolder, @SuppressLint("RecyclerView") position: Int) {
-       val itemList = list[position]
-        holder.binding.tvCalendarDate.text = itemList.calendarDate
-        holder.binding.tvCalendarDay.text = itemList.calendarDay
-
-        val today = Calendar.getInstance().time
-        val calendarDateModel = CalendarDateModel(today, isSelected = true)
-        val currentposition = position
-//        if(itemList.calendarDate == calendarDateModel.calendarDate){
-//            val currentposition = position
-//            if(position == (list.size - 1)){
-//                holder.itemView.performClick()
-//            }
-//
-//
-////
-//        }
-
-        holder.itemView.setOnClickListener {
-            adapterPosition = position
-            notifyItemRangeChanged(0, list.size)
-            mListener?.onItemClick(position)
-            listener.invoke(itemList, position)
-        }
-
-        if (itemList.isSelected){
-            holder.binding.tvCalendarDay.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
-            holder.binding.tvCalendarDate.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
-            holder.binding.linearCalendar.setBackgroundResource(R.drawable.rectangle_outline)
-        }else {
-            holder.binding.tvCalendarDay.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.black))
-            holder.binding.tvCalendarDate.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.black))
-            holder.binding.linearCalendar.setBackgroundResource(R.drawable.rectangle_outline)
-        }
+    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
+        holder.bind(dates[position])
     }
-
-
-    fun setData(calendarList: ArrayList<CalendarDateModel>) {
-        list.clear()
-        list.addAll(calendarList)
-        notifyDataSetChanged()
-    }
-
 }

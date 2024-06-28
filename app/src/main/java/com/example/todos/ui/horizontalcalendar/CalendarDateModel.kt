@@ -3,7 +3,7 @@ package com.example.todos.ui.horizontalcalendar
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class  CalendarDateModel(var data: Date, var isSelected: Boolean = false) {
+data class  CalendarDateModel(var data: Date) {
 
     val calendarDay: String
         get() = SimpleDateFormat("EEE", Locale.getDefault()).format(data)
