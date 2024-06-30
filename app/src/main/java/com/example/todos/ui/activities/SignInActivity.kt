@@ -78,7 +78,7 @@ class  SignInActivity : AppCompatActivity() {
             if(user!=null){
                 val userId = user.userId
                 saveLoginStatus(true, userId)
-                todoViewModel.fetchTodoFromApiOneTime()
+//                todoViewModel.fetchTodoFromApiOneTime()
                 lifecycleScope.launch {
                     delay(500L)
                     MainApplication.showToastMessage("Signing In")

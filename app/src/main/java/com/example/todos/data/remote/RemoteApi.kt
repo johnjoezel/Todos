@@ -14,8 +14,8 @@ interface RemoteApi {
     @GET("users?limit=0")
     suspend fun getAllUsersFromApi() : UserResponse
 
-    @GET("users/{userId}/todos")
-    suspend fun getAllTodosFromApi(@Path("userId") userId : Int) : TodoResponse
+//    @GET("users/{userId}/todos")
+//    suspend fun getAllTodosFromApi(@Path("userId") userId : Int) : TodoResponse
 
 //    @POST("todos")
 //    suspend fun insertTodo(@Body todo : Todo)

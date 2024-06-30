@@ -12,6 +12,7 @@ import com.example.todos.data.pojo.Todo
 import com.example.todos.databinding.ActivityAddTaskBinding
 import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.viewmodels.TodoViewModel
+import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,6 +41,16 @@ class AddTaskActivity : AppCompatActivity() {
 
         binding.btnBack.setOnClickListener{
             onBackPressed()
+        }
+
+        binding.layoutTaskDate.setOnClickListener{
+            val datePicker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select date")
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build()
+
+            datePicker.show(supportFragmentManager, datePicker.toString())
         }
     }
 

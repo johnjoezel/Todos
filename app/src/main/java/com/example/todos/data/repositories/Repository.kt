@@ -71,24 +71,24 @@ class Repository @Inject constructor(private val todoDao: TodoDao, private val u
 
 
 
-    suspend fun fetchTodos(userId: Int){
-        try{
-            val todos = todoDao.getUsersTodo(userId)
-            if(todos.value == null){
-                val todosFromApi = remoteApi.getAllTodosFromApi(userId)
-                val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
-                todoDao.insertAllTodos(storeTheTodos)
-            }
-        } catch (e: HttpException) {
-            MainApplication.showToastMessage(e.message.toString())
-        } catch (e: UnknownHostException) {
-            // Handle network unavailable
-            MainApplication.showToastMessage(e.message.toString())
-        } catch (e: Exception) {
-            // Handle other errors
-            MainApplication.showToastMessage(e.message.toString())
-        }
-    }
+//    suspend fun fetchTodos(userId: Int){
+//        try{
+//            val todos = todoDao.getUsersTodo(userId)
+//            if(todos.value == null){
+//                val todosFromApi = remoteApi.getAllTodosFromApi(userId)
+//                val storeTheTodos = todosFromApi.todos.map{ mapToTodo(it)}
+//                todoDao.insertAllTodos(storeTheTodos)
+//            }
+//        } catch (e: HttpException) {
+//            MainApplication.showToastMessage(e.message.toString())
+//        } catch (e: UnknownHostException) {
+//            // Handle network unavailable
+//            MainApplication.showToastMessage(e.message.toString())
+//        } catch (e: Exception) {
+//            // Handle other errors
+//            MainApplication.showToastMessage(e.message.toString())
+//        }
+//    }
 
     suspend fun deleteTodo(todo: Todo){
         todoDao.deleteTodo(todo)

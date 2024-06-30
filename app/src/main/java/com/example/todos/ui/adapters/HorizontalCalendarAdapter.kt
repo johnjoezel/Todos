@@ -16,22 +16,42 @@ import java.util.Locale
 class HorizontalCalendarAdapter(private val dates: List<Date>): RecyclerView.Adapter<HorizontalCalendarAdapter.CalendarViewHolder>() {
 
     private var onClickListener :OnClickListener? = null
+
+    private var selectedItem = RecyclerView.NO_POSITION
     fun setOnClickListener(listener: OnClickListener) {
         onClickListener = listener
     }
 
     inner class CalendarViewHolder(val binding : ItemCalendarDateBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            // Click listener for the whole item view
+            itemView.setOnClickListener {
+                val previousSelected = selectedItem
+                selectedItem = adapterPosition
+                notifyItemChanged(previousSelected)
+                notifyItemChanged(selectedItem)
+
+                // Notify listener of the click event
+                onClickListener?.onDateClicked(dates[adapterPosition])
+            }
+        }
         fun bind(date: Date) {
             val formattedDayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(date)
             val formattedDayOfMonth = SimpleDateFormat("dd", Locale.getDefault()).format(date)
             binding.tvCalendarDate.text = formattedDayOfMonth.format(date)
             binding.tvCalendarDay.text = formattedDayOfWeek.format(date)
 
-            binding.linearCalendar.setOnClickListener{
-                binding.linearCalendar.setBackgroundColor(Color.parseColor("#F26E56"))
+            if (adapterPosition == selectedItem) {
+                // Set selected state
+                binding.linearCalendar.setBackgroundResource(R.drawable.rectangle_fill)
                 binding.tvCalendarDate.setTextColor(Color.WHITE)
                 binding.tvCalendarDay.setTextColor(Color.WHITE)
-                onClickListener?.onDateClicked(date)
+            } else {
+                // Set default state
+                binding.linearCalendar.setBackgroundResource(R.drawable.rectangle_outline)
+                binding.tvCalendarDate.setTextColor(Color.BLACK)
+                binding.tvCalendarDay.setTextColor(Color.BLACK)
             }
         }
 

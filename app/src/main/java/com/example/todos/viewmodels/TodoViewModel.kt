@@ -16,11 +16,11 @@ class TodoViewModel @Inject constructor(private val repository: Repository, priv
     val availableTodos : LiveData<List<Todo>> = repository.getAvailableTodos(sharedPreferenceHelper.userId)
     val completedTodos : LiveData<List<Todo>> = repository.getCompletedTodos(sharedPreferenceHelper.userId)
 
-    fun fetchTodoFromApiOneTime() {
-        viewModelScope.launch {
-            repository.fetchTodos(sharedPreferenceHelper.userId)
-        }
-    }
+//    fun fetchTodoFromApiOneTime() {
+//        viewModelScope.launch {
+//            repository.fetchTodos(sharedPreferenceHelper.userId)
+//        }
+//    }
 
     fun insertTodo(todo : Todo){
         viewModelScope.launch {
