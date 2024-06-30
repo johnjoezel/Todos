@@ -2,8 +2,14 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Todos" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+         <item name="colorPrimary">@color/colorPrimary</item>
+         <item name="colorSecondary">@color/colorSecondary</item>
+         <item name="colorTertiary">@color/colorTertiary</item>
+         <item name="colorSurface">@color/color_surface</item>
 
+    </style>
+    <style name="CircularShapeWithborder" parent="ShapeAppearanceOverlay.MaterialComponents.FloatingActionButton">
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="Theme.Todos" parent="Base.Theme.Todos" />
 </resources>

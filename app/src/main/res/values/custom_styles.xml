@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Circular">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+        <item name="strokeWidth">50dp</item>
+        <item name="strokeColor">@color/colorTertiary</item>
+    </style>
+
+    <style name="CustomShapeAppearanceOverlay.FloatingActionButton" parent="">
+        <item name="borderWidth">20dp</item>
+    </style>
+
+    <style name="CustomBackButton" parent="">
+        <item name="backgroundTint">#dddddd</item>
+        <item name="icon">@drawable/baseline_arrow_back_ios_24</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="iconTint">@color/white</item>
+    </style>
+
+</resources>

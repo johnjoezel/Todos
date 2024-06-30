@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -50,7 +51,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation("androidx.compose.material:material:1.6.7")
+    implementation("androidx.compose.material:material:1.6.8")
+    implementation(libs.firebase.common.ktx)
+    implementation(libs.firebase.database.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -121,8 +124,15 @@ dependencies {
 
     implementation("androidx.room:room-ktx:2.4.0")
 
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-compiler:2.51.1")
+
+    // CameraX dependencies
+    implementation("androidx.camera:camera-core:1.1.0")
+    implementation("androidx.camera:camera-camera2:1.1.0")
+    implementation("androidx.camera:camera-lifecycle:1.1.0")
+    implementation("androidx.camera:camera-view:1.1.0")
+
 }
 
 kapt {
