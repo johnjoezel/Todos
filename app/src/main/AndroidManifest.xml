@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Todos"
+        android:theme="@style/SplashScreenStyle"
         tools:targetApi="31">
         <activity
             android:name=".ui.activities.AddTaskActivity"
@@ -40,17 +40,13 @@
             android:name=".ui.activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.SignInActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.activities.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.SplashScreenActivity"
+            android:name=".ui.activities.SignInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -20,6 +20,7 @@ import com.example.todos.databinding.ActivitySignInBinding
 import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.viewmodels.AuthViewModel
 import com.example.todos.viewmodels.TodoViewModel
+import com.example.todos.viewmodels.UserViewModel
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
@@ -35,9 +36,8 @@ class  SignInActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivitySignInBinding
-    private lateinit var todoViewModel: TodoViewModel
+    private lateinit var userViewModel: UserViewModel
     private lateinit var authViewModel: AuthViewModel
-    private lateinit var databaseReference: DatabaseReference
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
@@ -47,9 +47,13 @@ class  SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
+        if(!isSplashScreenShown()){
+            userViewModel.fetchUsers()
+            flagSplashScreenAsShown()
+            setTheme(R.style.Theme_Todos)
+        }
 
-
-        todoViewModel = ViewModelProvider(this)[TodoViewModel::class.java]
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         //check if user is already logged in
         if(sharedPreferenceHelper.isLoggedIn){
@@ -60,6 +64,14 @@ class  SignInActivity : AppCompatActivity() {
             observers()
             backPressed()
         }
+    }
+
+    private fun flagSplashScreenAsShown() {
+        sharedPreferenceHelper.isSplashScreenShown = true
+    }
+
+    private fun isSplashScreenShown(): Boolean {
+        return sharedPreferenceHelper.isSplashScreenShown
     }
 
     private fun backPressed() {

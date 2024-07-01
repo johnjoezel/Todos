@@ -38,13 +38,13 @@ class SplashScreenActivity : AppCompatActivity() {
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-        if(isSplashScreenShown()){
-            redirectToLogin()
-        } else {
-            userViewModel.fetchUsers()
-            showSplashScreen()
-            flagSplashScreenAsShown()
-        }
+//        if(isSplashScreenShown()){
+//            redirectToLogin()
+//        } else {
+//            userViewModel.fetchUsers()
+//            showSplashScreen()
+//            flagSplashScreenAsShown()
+//        }
     }
 
     private fun isSplashScreenShown() : Boolean{
