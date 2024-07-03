@@ -1,9 +1,12 @@
 package com.example.todos.viewmodels
 
+import android.view.View
+import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todos.R
 import com.example.todos.data.repositories.AuthRepository
 import com.example.todos.data.pojo.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +15,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
+
+    val inputemail = MutableLiveData<String>()
+    val inputusername = MutableLiveData<String>()
+    val inputpassword = MutableLiveData<String>()
+
 
     private val _loginUser = MutableLiveData<User>()
     val loginUser: LiveData<User> get() = _loginUser
@@ -35,7 +43,11 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
 
 
 
-    fun signUp(user : User){
+    fun signUp(){
+        val email = inputemail.value
+        val username = inputusername.value
+        val password = inputpassword.value
+        val user = User(email = email!!,username = username!!,password = password!!)
         viewModelScope.launch {
             try{
                 _returnLong.postValue(authRepository.insertUser(user))
@@ -55,4 +67,5 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
             }
         }
     }
+
 }

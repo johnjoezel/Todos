@@ -47,14 +47,13 @@ class  SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivitySignInBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
+        userViewModel.fetchUsers()
         if(!isSplashScreenShown()){
-            userViewModel.fetchUsers()
             flagSplashScreenAsShown()
             setTheme(R.style.Theme_Todos)
         }
-
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-        authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
         //check if user is already logged in
         if(sharedPreferenceHelper.isLoggedIn){
             redirectToMain()

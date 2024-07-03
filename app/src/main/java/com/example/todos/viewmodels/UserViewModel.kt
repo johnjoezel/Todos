@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todos.MainApplication
 import com.example.todos.data.repositories.Repository
 import com.example.todos.data.pojo.User
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,7 @@ class UserViewModel @Inject constructor(private val repository: Repository): Vie
             try {
                repository.fetchAndStoreUsers()
             } catch (e: Exception) {
-                Log.d("im here", "fetchUsers: ")
+                MainApplication.showToastMessage(e.message.toString())
             }
         }
     }

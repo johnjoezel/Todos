@@ -15,6 +15,7 @@
     <string name="requireCPassword">Input Confirm Password</string>
     <string name="requireEmail">Input Email</string>
     <string name="usernameTaken">Username is not available</string>
+    <string name="usernameAvailable">Available</string>
     <string name="passwordMismatch">Password Mismatch</string>
     <string name="invalidCredentials">Invalid Credentials</string>
     <string name="selectGender">Select Gender</string>

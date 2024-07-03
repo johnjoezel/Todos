@@ -41,7 +41,7 @@ class Repository @Inject constructor(private val todoDao: TodoDao, private val u
     }
     private fun mapToUser(user: User): User {
         return User(
-            userId = user.userId,
+            email = user.email,
             username = user.username,
             password = user.password
         )
