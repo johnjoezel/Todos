@@ -1,13 +1,7 @@
-package com.example.todos.data.remote
+package com.example.todos.domain.remote
 
-import com.example.todos.data.pojo.Todo
-import com.example.todos.data.pojo.TodoResponse
-import com.example.todos.data.pojo.User
-import com.example.todos.data.pojo.UserResponse
-import retrofit2.http.Body
+import com.example.todos.domain.pojo.UserResponse
 import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
 
 interface RemoteApi {
 

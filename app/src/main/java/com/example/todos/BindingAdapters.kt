@@ -3,8 +3,6 @@ package com.example.todos
 import android.text.TextUtils
 import android.view.View
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todos.viewmodels.AuthViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 

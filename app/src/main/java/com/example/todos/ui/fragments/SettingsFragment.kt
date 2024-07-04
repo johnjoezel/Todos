@@ -15,7 +15,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.todos.data.local.AppDatabase
+import com.example.todos.domain.local.AppDatabase
 import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.ui.activities.SignInActivity
 import com.example.todos.databinding.FragmentSettingsBinding

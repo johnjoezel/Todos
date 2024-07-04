@@ -2,30 +2,21 @@ package com.example.todos.ui.activities
 
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.todos.MainApplication
 import com.example.todos.R
-import com.example.todos.data.local.AppDatabase
-import com.example.todos.data.pojo.User
+import com.example.todos.domain.local.AppDatabase
 import com.example.todos.databinding.ActivitySignInBinding
 import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.viewmodels.AuthViewModel
-import com.example.todos.viewmodels.TodoViewModel
 import com.example.todos.viewmodels.UserViewModel
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.database
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,11 +36,17 @@ class  SignInActivity : AppCompatActivity() {
     @Inject
     lateinit var appDatabase: AppDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivitySignInBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
         super.onCreate(savedInstanceState)
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         authViewModel = ViewModelProvider(this)[AuthViewModel::class.java]
-        userViewModel.fetchUsers()
+        binding.authViewModel = authViewModel
+        binding.lifecycleOwner = this
+        if(!alreadyFetched()){
+            userViewModel.fetchUsers()
+            flagAlreadyFetched()
+        }
+
         if(!isSplashScreenShown()){
             flagSplashScreenAsShown()
             setTheme(R.style.Theme_Todos)
@@ -58,11 +55,17 @@ class  SignInActivity : AppCompatActivity() {
         if(sharedPreferenceHelper.isLoggedIn){
             redirectToMain()
         } else {
-            setContentView(binding.root)
-            clickListeners()
             observers()
             backPressed()
         }
+    }
+
+    private fun flagAlreadyFetched() {
+        sharedPreferenceHelper.alreadyFetched = true
+    }
+
+    private fun alreadyFetched(): Boolean {
+        return sharedPreferenceHelper.alreadyFetched
     }
 
     private fun flagSplashScreenAsShown() {
@@ -72,7 +75,6 @@ class  SignInActivity : AppCompatActivity() {
     private fun isSplashScreenShown(): Boolean {
         return sharedPreferenceHelper.isSplashScreenShown
     }
-
     private fun backPressed() {
         val onBackPressedCallback = object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
@@ -81,8 +83,6 @@ class  SignInActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
-
-
     private fun observers() {
 
         authViewModel.loginUser.observe(this){ user ->
@@ -106,32 +106,29 @@ class  SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickListeners() {
-        //when button signin is clicked
-        binding.btnSignin.setOnClickListener{
-            val username = binding.etUsername.text.toString()
-            val password = binding.etPassword.text.toString()
-            val fields = listOf(Pair(binding.etUsername, binding.layoutusername to R.string.requiredUsername),
-                Pair(binding.etPassword, binding.layoutpassword to R.string.requiredPassword))
-            var allFieldsFilled = true
-            fields.forEach{(editText, pair) ->
-                val (textInputLayout, errorMessageRedId) = pair
-                if(editText.text!!.isEmpty()){
-                    textInputLayout.error = getString(errorMessageRedId)
-                    allFieldsFilled = false
-                } else {
-                    textInputLayout.error = null
-                }
-            }
-            if(allFieldsFilled){
-                authViewModel.signIn(username, password)
-            }
-        }
-
-        binding.tvSignup.setOnClickListener{
-            redirectToSignUp()
-        }
-    }
+//    private fun clickListeners() {
+//        //when button signin is clicked
+//        binding.btnSignin.setOnClickListener{
+//            val username = binding.etUsername.text.toString()
+//            val password = binding.etPassword.text.toString()
+//            val fields = listOf(Pair(binding.etUsername, binding.layoutusername to R.string.requiredUsername),
+//                Pair(binding.etPassword, binding.layoutpassword to R.string.requiredPassword))
+//            var allFieldsFilled = true
+//            fields.forEach{(editText, pair) ->
+//                val (textInputLayout, errorMessageRedId) = pair
+//                if(editText.text!!.isEmpty()){
+//                    textInputLayout.error = getString(errorMessageRedId)
+//                    allFieldsFilled = false
+//                } else {
+//                    textInputLayout.error = null
+//                }
+//            }
+//            if(allFieldsFilled){
+//
+//            }
+//        }
+//
+//    }
 
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(this)
@@ -148,7 +145,7 @@ class  SignInActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun redirectToSignUp() {
+    fun redirectToSignUp(view : View) {
         val intent = Intent(this, SignUpActivity::class.java)
         // Clear the navigation event to avoid navigating multiple times
         startActivity(intent)

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.todos.databinding.ActivitySplashScreenBinding
-import com.example.todos.data.local.AppDatabase
+import com.example.todos.domain.local.AppDatabase
 import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint

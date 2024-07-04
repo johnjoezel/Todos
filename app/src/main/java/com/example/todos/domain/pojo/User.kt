@@ -1,8 +1,6 @@
-package com.example.todos.data.pojo
+package com.example.todos.domain.pojo
 
-import android.graphics.Bitmap
 import android.net.Uri
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

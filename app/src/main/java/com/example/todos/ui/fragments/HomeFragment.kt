@@ -9,10 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todos.data.local.AppDatabase
-import com.example.todos.data.pojo.Todo
+import com.example.todos.domain.local.AppDatabase
+import com.example.todos.domain.pojo.Todo
 import com.example.todos.databinding.FragmentHomeBinding
-import com.example.todos.databinding.FragmentMyTaskBinding
 import com.example.todos.ui.adapters.RecentTaskAdapater
 import com.example.todos.ui.listeners.OnButtonClickListener
 import com.example.todos.util.helper.SharedPreferenceHelper

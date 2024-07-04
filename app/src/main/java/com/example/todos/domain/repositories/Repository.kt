@@ -1,20 +1,14 @@
-package com.example.todos.data.repositories
+package com.example.todos.domain.repositories
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.todos.MainApplication
-import com.example.todos.data.remote.RemoteApi
-import com.example.todos.data.pojo.Todo
-import com.example.todos.data.pojo.User
-import com.example.todos.data.local.TodoDao
-import com.example.todos.data.local.UserDao
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.example.todos.domain.remote.RemoteApi
+import com.example.todos.domain.pojo.Todo
+import com.example.todos.domain.pojo.User
+import com.example.todos.domain.local.TodoDao
+import com.example.todos.domain.local.UserDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 class Repository @Inject constructor(private val todoDao: TodoDao, private val userDao: UserDao, private val remoteApi: RemoteApi) {

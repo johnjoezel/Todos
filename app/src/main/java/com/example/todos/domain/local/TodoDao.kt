@@ -1,4 +1,4 @@
-package com.example.todos.data.local
+package com.example.todos.domain.local
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -7,7 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.example.todos.data.pojo.Todo
+import com.example.todos.domain.pojo.Todo
 
 
 @Dao

@@ -1,7 +1,7 @@
-package com.example.todos.data.repositories
+package com.example.todos.domain.repositories
 
-import com.example.todos.data.pojo.User
-import com.example.todos.data.local.UserDao
+import com.example.todos.domain.pojo.User
+import com.example.todos.domain.local.UserDao
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(private val userDao: UserDao) {

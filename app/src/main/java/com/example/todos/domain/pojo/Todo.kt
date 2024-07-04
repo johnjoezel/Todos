@@ -1,4 +1,4 @@
-package com.example.todos.data.pojo
+package com.example.todos.domain.pojo
 
 import androidx.room.Entity
 import androidx.room.ForeignKey

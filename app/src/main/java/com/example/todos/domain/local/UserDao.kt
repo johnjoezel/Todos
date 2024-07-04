@@ -1,4 +1,4 @@
-package com.example.todos.data.local
+package com.example.todos.domain.local
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -6,7 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.todos.data.pojo.User
+import com.example.todos.domain.pojo.User
 
 @Dao
 interface UserDao{

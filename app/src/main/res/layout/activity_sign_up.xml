@@ -8,9 +8,6 @@
             name="authViewModel"
             type="com.example.todos.viewmodels.AuthViewModel" />
 
-        <variable
-            name="user"
-            type="com.example.todos.data.pojo.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -144,7 +141,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/EULA" />
         </LinearLayout>
-
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="wrap_content"
@@ -152,7 +148,6 @@
             android:textSize="@dimen/_15sdp"
             android:textColor="@color/white"
             android:text="Sign Up"
-            android:enabled="false"
             android:onClick="@{() -> authViewModel.signUp()}"
             android:backgroundTint="@color/colorPrimary"
             android:layout_marginTop="8dp"
@@ -161,8 +156,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tv_signin"
             app:layout_constraintTop_toBottomOf="@id/eulalayout" />
-
-
         <TextView
             android:id="@+id/tv_signin"
             android:layout_width="wrap_content"
@@ -172,10 +165,10 @@
             android:fontFamily="@font/myfont"
             android:text="@string/signinlink"
             android:textColor="@color/colorPrimary"
+            android:onClick="goToSignActivity"
             app:layout_constraintTop_toBottomOf="@id/btn_signup"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

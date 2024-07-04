@@ -13,6 +13,7 @@ class SharedPreferenceHelper @Inject constructor(private val sharedPreferences: 
         const val PREF_KEY_USER_ID = "userId"
         const val PREF_KEY_IS_LOGGED_IN = "isLoggedIn"
         const val SPLASH_SCREEN_SHOWN = "splashScreenShown"
+        const val FETCHED_ALREADY = "fetchfromapi"
     }
 
     var userId: Int
@@ -26,6 +27,10 @@ class SharedPreferenceHelper @Inject constructor(private val sharedPreferences: 
     var isSplashScreenShown: Boolean
         get() = sharedPreferences.getBoolean(SPLASH_SCREEN_SHOWN, false)
         set(value) = editor.putBoolean(SPLASH_SCREEN_SHOWN, value).apply()
+
+    var alreadyFetched: Boolean
+    get() = sharedPreferences.getBoolean(FETCHED_ALREADY, false)
+    set(value) = editor.putBoolean(FETCHED_ALREADY, value).apply()
 
     fun clear() {
         editor.clear().apply()

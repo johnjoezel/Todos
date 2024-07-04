@@ -1,20 +1,17 @@
 package com.example.todos.ui.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.todos.data.local.AppDatabase
-import com.example.todos.data.pojo.Todo
+import com.example.todos.domain.local.AppDatabase
+import com.example.todos.domain.pojo.Todo
 import com.example.todos.databinding.FragmentCompletedTaskBinding
 import com.example.todos.ui.adapters.HorizontalCalendarAdapter
 import com.example.todos.ui.adapters.TodoAdapter
-import com.example.todos.ui.horizontalcalendar.CalendarDateModel
 import com.example.todos.ui.listeners.OnClickListener
 import com.example.todos.util.helper.SharedPreferenceHelper
 import com.example.todos.viewmodels.CalendarViewModel
@@ -73,10 +70,8 @@ class CompletedTaskFragment : Fragment(), OnClickListener {
             horizontalCalendarAdapter = HorizontalCalendarAdapter(dates)
             binding.recyclerView.adapter = horizontalCalendarAdapter
             horizontalCalendarAdapter.setOnClickListener(this)
+            horizontalCalendarAdapter.performClickOnCurrentDate()
         }
-
-
-
 
     }
 

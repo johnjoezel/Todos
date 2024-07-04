@@ -3,7 +3,7 @@ package com.example.todos.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todos.data.pojo.Todo
+import com.example.todos.domain.pojo.Todo
 import com.example.todos.databinding.RecentTaskItemBinding
 
 class RecentTaskAdapater() : RecyclerView.Adapter<RecentTaskAdapater.RecentTaskViewHolder>() {

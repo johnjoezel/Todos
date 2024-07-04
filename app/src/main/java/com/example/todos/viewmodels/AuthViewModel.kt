@@ -1,14 +1,11 @@
 package com.example.todos.viewmodels
 
-import android.view.View
-import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todos.R
-import com.example.todos.data.repositories.AuthRepository
-import com.example.todos.data.pojo.User
+import com.example.todos.domain.repositories.AuthRepository
+import com.example.todos.domain.pojo.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +17,6 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     val inputusername = MutableLiveData<String>()
     val inputpassword = MutableLiveData<String>()
 
-
     private val _loginUser = MutableLiveData<User>()
     val loginUser: LiveData<User> get() = _loginUser
 
@@ -31,17 +27,17 @@ class AuthViewModel @Inject constructor(private val authRepository: AuthReposito
     val usernameAvailable: LiveData<Boolean> get() = _usernameAvailable
 
 
-    fun signIn(username: String, password : String) {
+    fun signIn() {
+        val username = inputusername.value
+        val password = inputpassword.value
         viewModelScope.launch {
             try {
-                _loginUser.postValue(authRepository.signInUser(username, password))
+                _loginUser.postValue(authRepository.signInUser(username!!, password!!))
             } catch (e: Exception) {
 
             }
         }
     }
-
-
 
     fun signUp(){
         val email = inputemail.value

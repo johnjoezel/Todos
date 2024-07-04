@@ -1,4 +1,4 @@
-package com.example.todos.data.converter
+package com.example.todos.domain.converter
 
 import android.net.Uri
 import androidx.room.TypeConverter

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todos.R
 import com.example.todos.ui.listeners.OnButtonClickListener
 import com.example.todos.databinding.TodoListBinding
-import com.example.todos.data.pojo.Todo
+import com.example.todos.domain.pojo.Todo
 
 class TodoAdapter:RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
     private var todoList = ArrayList<Todo>()
